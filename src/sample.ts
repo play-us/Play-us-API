@@ -1,6 +1,4 @@
 import express from 'express';
-import cors from 'cors';
-import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 dotenv.config();
 const { SALT } = process.env;
@@ -10,6 +8,25 @@ dotenv.config();
 
 const sample = express();
 
+/**
+*  @swagger
+*  tags:
+*    name: SAMPLE
+*    description: 샘플 API
+*/
+/**
+*  @swagger
+*  paths:
+*   /sample:
+*     get:
+*       summary: 샘플
+*       tags: [SAMPLE]
+*       responses:
+*         "200":
+*           description: sample.
+*           content:
+*             application/json:
+*/
 sample.get('/get', async (req: express.Request, res: express.Response) => {
   try {
     let sql = 'select * from member'; // db에 content를 넣는 쿼리문 작성;
