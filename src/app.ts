@@ -10,8 +10,20 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(require('./swaggerDoc')));
 const sample = require('./sample')
 app.use('/sample', sample)
 
+//common
+const common = require('./common/commonAPI')
+app.use('/common', common);
+
+//main
+const main = require('./main/mainAPI')
+app.use('/main', main);
+
 //field
 const field = require('./field/fieldAPI')
 app.use('/field', field)
+
+//community
+const community = require('./community/communityAPI')
+app.use('/community', community)
 
 app.listen(8080)

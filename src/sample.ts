@@ -1,9 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
-dotenv.config();
-const { SALT } = process.env;
 import db from './db';
-
+import camelsKeys from "camelcase-keys";
 dotenv.config();
 
 const sample = express();
@@ -33,7 +31,7 @@ sample.get('/get', async (req: express.Request, res: express.Response) => {
     const rows = await db.query(sql); //쿼리문 실행 및 rows에 담기
     const conn = await db.getConnection(); // db에서 커넥션을 가져오기
     conn.release(); // 커넥션을 다시 db로 반환
-    if (rows) return res.status(200).json({ result: rows });
+    if (rows) return res.status(200).json({ result: camelsKeys(rows) });
     else throw console.log('에러발생');
   } catch (err) {
     console.log(err);

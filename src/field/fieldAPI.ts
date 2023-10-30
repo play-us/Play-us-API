@@ -1,10 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
-dotenv.config();
 import db from '../db';
-
+import camelsKeys from "camelcase-keys";
 dotenv.config();
-
 const field = express();
 
 /**
@@ -21,6 +19,22 @@ const field = express();
 *     get:
 *       summary: 구장리스트 조회
 *       tags: [FIELD]
+*       parameters:
+*        - in: query
+*          name: area
+*          required: false
+*          description: 지역(SYS006)
+*          type: string
+*        - in: query
+*          name: fieldTp
+*          required: false
+*          description: 구장구분(SYS002)
+*          type: string
+*        - in: query
+*          name: searchTxt
+*          required: false
+*          description: 검색
+*          type: string
 *       responses:
 *         "200":
 *           description: filed list.
@@ -29,11 +43,18 @@ const field = express();
 */
 field.get('/getFieldList', async (req: express.Request, res: express.Response) => {
   try {
-    let sql = 'select * from field'; // db에 content를 넣는 쿼리문 작성;
-    const rows = await db.query(sql); //쿼리문 실행 및 rows에 담기
-    const conn = await db.getConnection(); // db에서 커넥션을 가져오기
-    conn.release(); // 커넥션을 다시 db로 반환
-    if (rows) return res.status(200).json({ result: rows });
+    const param = JSON.parse(JSON.stringify(req.params));
+    const fieldDB = require('../field/fieldDB');
+    const fieldId = param['fieldId'];
+    const fieldTp = param['fieldTp'];
+    const area = param['area'];
+    const searchTxt = param['searchTxt'];
+
+    let sql = fieldDB.getFieldList(fieldId, fieldTp, area, searchTxt);
+    const rows = await db.query(sql);
+    const conn = await db.getConnection();
+    conn.release();
+    if (rows) return res.status(200).json({ result: camelsKeys(rows) });
     else throw console.log('에러발생');
   } catch (err) {
     console.log(err);
@@ -47,6 +68,12 @@ field.get('/getFieldList', async (req: express.Request, res: express.Response) =
 *     get:
 *       summary: 구장상세 조회
 *       tags: [FIELD]
+*       parameters:
+*        - in: query
+*          name: fieldId
+*          required: false
+*          description: 구장ID
+*          type: string
 *       responses:
 *         "200":
 *           description: field.
@@ -55,11 +82,14 @@ field.get('/getFieldList', async (req: express.Request, res: express.Response) =
 */
 field.get('/getFieldDetail', async (req: express.Request, res: express.Response) => {
     try {
-      let sql = 'select * from field'; // db에 content를 넣는 쿼리문 작성;
-      const rows = await db.query(sql); //쿼리문 실행 및 rows에 담기
-      const conn = await db.getConnection(); // db에서 커넥션을 가져오기
-      conn.release(); // 커넥션을 다시 db로 반환
-      if (rows) return res.status(200).json({ result: rows });
+      const param = JSON.parse(JSON.stringify(req.params));
+      const fieldDB = require('../field/fieldDB');
+      const fieldId = param['fieldId'];
+      let sql = fieldDB.getFieldList(fieldId);
+      const rows = await db.query(sql)
+      const conn = await db.getConnection();
+      conn.release();
+      if (rows) return res.status(200).json({ result: camelsKeys(rows) });
       else throw console.log('에러발생');
     } catch (err) {
       console.log(err);
