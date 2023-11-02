@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app",
     "dev": "nodemon --watch \"*.ts\" --exec \"ts-node\" src/app.ts",
-    "build": "yarn run build"
+    "build": "tsc && node dist"
   },
   "author": "",
   "license": "ISC",
