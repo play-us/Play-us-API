@@ -65,7 +65,7 @@ common.get('/getSysCode', async (req: express.Request, res: express.Response) =>
     const rows = await db.query(sql); 
     const conn = await db.getConnection(); 
     conn.release(); 
-    return res.status(200).json({ result: camelsKeys(rows) });
+    return res.status(200).json({ result: camelsKeys(rows[0]) });
   } catch (err) {
     console.log(err);
   }

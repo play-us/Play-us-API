@@ -8,7 +8,7 @@ dotenv.config();
 const main = express();
 
 interface queryType {
-    tp : [OkPacket | RowDataPacket[] | ResultSetHeader[] | RowDataPacket[][] | OkPacket[] | ProcedureCallPacket, FieldPacket[]] | null
+    tp : [OkPacket | RowDataPacket[] | ResultSetHeader[] | RowDataPacket[][] | OkPacket[] | ProcedureCallPacket, FieldPacket[]] | any | null
 }
 
 /**
@@ -43,6 +43,21 @@ interface queryType {
  *          required: false
  *          description: 검색
  *          type: string
+ *        - in: query
+ *          name: sort
+ *          required: false
+ *          description: 정렬
+ *          type: string
+ *        - in: query
+  *          name: pageStart
+  *          required: false
+  *          description: 페이지시작
+  *          type: number
+  *        - in: query
+  *          name: pageEnd
+  *          required: false
+  *          description: 페이지끝
+  *          type: number
  *      responses:
  *       200:
  *        description: 테스트 데이터 생성 성공
@@ -66,36 +81,45 @@ main.get('/getMainData', async (req: express.Request, res: express.Response) => 
     const param = JSON.parse(JSON.stringify(req.params));
     const commonDB = require('../common/commonDB');
     const fieldDB = require('../field/fieldDB');
+    const commuDB = require('../community/communityDB');
     
     const fieldId = param['fieldId'];
     const fieldTp = param['fieldTp'];
     const area = param['area'];
     const searchTxt = param['searchTxt'];
+    const sort = param['sort'];
+    const pageStart = param['pageStart'];
+    const pageEnd = param['pageEnd'];
+    const commuFieldTp = param['commuFieldTp'];
+    const commuArea = param['commuArea'];
+    const commuSearchTxt = param['commuSearchTxt'];
+    const commuPageStart = param['commuPageStart'];
+    const commuPageEnd = param['commuPageEnd'];
 
     //시도리스트
     const cityListSql = commonDB.getSysCode(null, 'SYS005', null, null, '1');
     const cityList = await db.query(cityListSql); 
-    resultMap.cityList= camelsKeys(cityList);
+    resultMap.cityList= camelsKeys(cityList[0]);
 
     //시군구리스트
     const areaListSql = commonDB.getSysCode(null, 'SYS006', null, null, '1');
     const areaList = await db.query(areaListSql); 
-    resultMap.areaList= camelsKeys(areaList);
+    resultMap.areaList= camelsKeys(areaList[0]);
 
     //구장종류리스트
     const fieldTpListSql = commonDB.getSysCode(null, 'SYS002', null, null, '1');
     const fieldTpList = await db.query(fieldTpListSql); 
-    resultMap.fieldTpList= camelsKeys(fieldTpList);
+    resultMap.fieldTpList= camelsKeys(fieldTpList[0]);
 
     // 구장리스트
-    const fieldListSql = fieldDB.getFieldList(fieldId, fieldTp, area, searchTxt); 
+    const fieldListSql = fieldDB.getFieldList(fieldId, fieldTp, area, searchTxt, sort, pageStart, pageEnd); 
     const fieldList = await db.query(fieldListSql); 
-    resultMap.fieldList= camelsKeys(fieldList);
+    resultMap.fieldList= camelsKeys(fieldList[0]);
 
     // 커뮤니티리스트
-    const commuListSql = 'select * from community'; 
+    const commuListSql = commuDB.getCommunityList(commuFieldTp, commuArea, commuSearchTxt, commuPageStart, commuPageEnd);
     const commuList = await db.query(commuListSql); 
-    resultMap.commuList= camelsKeys(commuList);
+    resultMap.commuList= camelsKeys(commuList[0]);
 
     const conn = await db.getConnection(); 
     conn.release(); 

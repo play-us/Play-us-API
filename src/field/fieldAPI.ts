@@ -35,6 +35,21 @@ const field = express();
 *          required: false
 *          description: 검색
 *          type: string
+*        - in: query
+*          name: sort
+*          required: false
+*          description: 정렬
+*          type: string
+*        - in: query
+*          name: pageStart
+*          required: false
+*          description: 페이지시작
+*          type: number
+*        - in: query
+*          name: pageEnd
+*          required: false
+*          description: 페이지끝
+*          type: number
 *       responses:
 *         "200":
 *           description: filed list.
@@ -49,12 +64,15 @@ field.get('/getFieldList', async (req: express.Request, res: express.Response) =
     const fieldTp = param['fieldTp'];
     const area = param['area'];
     const searchTxt = param['searchTxt'];
+    const sort = param['sort'];
+    const pageStart = param['pageStart'];
+    const pageEnd = param['pageEnd'];
 
-    let sql = fieldDB.getFieldList(fieldId, fieldTp, area, searchTxt);
+    let sql = fieldDB.getFieldList(fieldId, fieldTp, area, searchTxt, sort, pageStart, pageEnd);
     const rows = await db.query(sql);
     const conn = await db.getConnection();
     conn.release();
-    if (rows) return res.status(200).json({ result: camelsKeys(rows) });
+    if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
     else throw console.log('에러발생');
   } catch (err) {
     console.log(err);
@@ -71,8 +89,13 @@ field.get('/getFieldList', async (req: express.Request, res: express.Response) =
 *       parameters:
 *        - in: query
 *          name: fieldId
-*          required: false
+*          required: true
 *          description: 구장ID
+*          type: string
+*        - in: query
+*          name: email
+*          required: false
+*          description: 이메일
 *          type: string
 *       responses:
 *         "200":
@@ -85,11 +108,13 @@ field.get('/getFieldDetail', async (req: express.Request, res: express.Response)
       const param = JSON.parse(JSON.stringify(req.params));
       const fieldDB = require('../field/fieldDB');
       const fieldId = param['fieldId'];
-      let sql = fieldDB.getFieldList(fieldId);
+      const email = param['email'];
+
+      let sql = fieldDB.getFieldDetail(fieldId, email);
       const rows = await db.query(sql)
       const conn = await db.getConnection();
       conn.release();
-      if (rows) return res.status(200).json({ result: camelsKeys(rows) });
+      if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
       else throw console.log('에러발생');
     } catch (err) {
       console.log(err);
@@ -124,7 +149,7 @@ field.get('/getFieldLike', async (req: express.Request, res: express.Response) =
     const rows = await db.query(sql)
     const conn = await db.getConnection();
     conn.release();
-    if (rows) return res.status(200).json({ result: camelsKeys(rows) });
+    if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
     else throw console.log('에러발생');
   } catch (err) {
     console.log(err);

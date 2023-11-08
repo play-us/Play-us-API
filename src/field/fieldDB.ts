@@ -1,8 +1,11 @@
-const getFieldList = (fieldId:string, fieldTp:string, area:string, searchTxt:string)=>{
+import { StringMappingType } from "typescript";
+
+//구장리스트 조회
+const getFieldList = (fieldId:string, fieldTp:string, area:string, searchTxt:string, sort: string, pageStart:number, pageEnd: number)=>{
     let sql = "select a.field_id "+
 	    ", a.field_nm "+
         ", (select syscd_nm from sys_code x where x.class_cd = 'SYS002' and x.syscd_cd = a.field_tp) as field_tp " +
-        ", (select syscd_nm from sys_code x where x.class_cd = 'SYS006' and x.syscd_cd = a.field_tp) as area " +
+        ", (select syscd_nm from sys_code x where x.class_cd = 'SYS006' and x.syscd_cd = a.area) as area " +
         ", a.addr " +
         ", a.lat " +
         ", a.lng " +
@@ -25,53 +28,166 @@ const getFieldList = (fieldId:string, fieldTp:string, area:string, searchTxt:str
         ", b.img_url " +
         ", b.img_sort " +
         ", (select count(1) from field_like x where x.field_id = a.field_id) as like_cnt " +
+        ", (select count(1) from reservation x where x.field_id = a.field_id) as resv_cnt " +
         "from field a " +
         "left outer join field_image b on b.field_id = a.field_id and b.img_sort = 1 " +
         "where 1=1 ";
-    if(fieldId) sql + ' and field_id = ' + fieldId;
-    if(fieldTp) sql + ' and field_tp = ' + fieldTp;
-    if(area) sql + ' and area = ' + area;
-    if(searchTxt) sql + " and field_nm like '%" + searchTxt + "%'";
-    sql + ' order by insert_datetime, field_nm'
+    if(fieldId) sql = sql + " and field_id = '" + fieldId + "'";
+    if(fieldTp) sql = sql + " and field_tp = '" + fieldTp + "'";
+    if(area) sql = sql + " and area = '" + area + "'";
+    if(searchTxt) sql = sql + " and field_nm like '%" + searchTxt + "%'";
+    if(sort && sort === '1') {
+        sql = sql + ' order by resv_cnt desc, insert_datetime desc, field_nm';
+    } else {
+        sql = sql + ' order by insert_datetime desc, field_nm';
+    }
+    if(pageStart && pageEnd){
+        sql = sql + 'limit ' + pageStart + ', ' + pageEnd;
+    }
+    
     return sql;
 };
 
-const getFieldDetail = (fieldId:string)=>{
+//구장상세 조회
+const getFieldDetail = (fieldId:string, email:string)=>{
     let sql = "select a.field_id "+
-    ", a.field_nm "+
-    ", (select syscd_nm from sys_code x where x.class_cd = 'SYS002' and x.syscd_cd = a.field_tp) as field_tp " +
-    ", (select syscd_nm from sys_code x where x.class_cd = 'SYS006' and x.syscd_cd = a.field_tp) as area " +
-    ", a.addr " +
-    ", a.lat " +
-    ", a.lng " +
-    ", a.opening_hours " +
-    ", a.closing_hours " +
-    ", a.price " +
-    ", a.hours " +
-    ", a.note " +
-    ", a.size " +
-    ", a.swrm_yn " +
-    ", a.parking_tp " +
-    ", a.rental_sup " +
-    ", a.use_yn " +
-    ", a.remark_txt " +
-    ", a.insert_datetime " +
-    ", a.insert_datetime " +
-    ", (select count(1) from field_like x where x.field_id = a.field_id) as like_cnt " +
-    "from field a " +
-    "where 1=1 ";
-    if(fieldId) sql + ' and field_id = ' + fieldId;
+        ", a.field_nm "+
+        ", (select syscd_nm from sys_code x where x.class_cd = 'SYS002' and x.syscd_cd = a.field_tp) as field_tp " +
+        ", (select syscd_nm from sys_code x where x.class_cd = 'SYS006' and x.syscd_cd = a.area) as area " +
+        ", a.addr " +
+        ", a.lat " +
+        ", a.lng " +
+        ", a.opening_hours " +
+        ", a.closing_hours " +
+        ", a.price " +
+        ", a.hours " +
+        ", a.note " +
+        ", a.size " +
+        ", a.swrm_yn " +
+        ", a.parking_tp " +
+        ", a.rental_sup " +
+        ", a.use_yn " +
+        ", a.remark_txt " +
+        ", a.insert_datetime " +
+        ", a.insert_datetime " +
+        ", (select count(1) from field_like x where x.field_id = a.field_id) as like_cnt " +
+        ", (case when b.like_id is not null then '1' else '0' end) as like_yn " +
+        "from field a " +
+        "left outer join field_like b on b.field_id = a.field_id and b.email = '" + email + "' " + 
+        "where 1=1 ";
+    if(fieldId) sql = sql + " and a.field_id = '" + fieldId  + "'";
     return sql;
 };
 
+//구장 insert
+const insertField = (fieldId:string, fieldNm:string, fieldTp:string, area:string, addr:string, lat:number, lng:number, openingHours:string, closingHours:string, price:string, hours:string, note:string, size:string, swrmYn:string, parkingTp:string, rentalSup:string)=> {
+    const sql = "INSERT INTO field " +
+        "field_id, " +
+        "field_nm, " +
+        "field_tp, " +
+        "area, " +
+        "addr, " +
+        "lat, " +
+        "lng, " +
+        "opening_hours, " +
+        "closing_hours, " +
+        "price, " +
+        "hours, " +
+        "note, " +
+        "size, " +
+        "swrm_yn, " +
+        "parking_tp, " +
+        "rental_sup, " +
+        "use_yn, " +
+        "remark_txt, " +
+        "insert_datetime, " +
+        "update_datetime) " +
+        " VALUES (" +
+        fieldId + ", " +
+        fieldNm + ", " +
+        fieldTp + ", " +
+        area + ", " +
+        addr + ", " +
+        lat + ", " +
+        lng + ", " +
+        openingHours + ", " +
+        closingHours + ", " +
+        price + ", " +
+        hours + ", " +
+        note + ", " +
+        size + ", " +
+        swrmYn + ", " +
+        parkingTp + ", " +
+        rentalSup + ", " +
+        "1, " +
+        "NULL, now(), now())";
+    return sql;
+}
+
+//구장좋아요 조회
 const getFieldLike = (fieldId:string)=>{
     let sql = "select a.like_id "+
-    ", a.field_id "+
-    ", a.email " +
-    "from field_like a " +
-    "where 1=1 ";
-    if(fieldId) sql + ' and field_id = ' + fieldId;
+        ", a.field_id "+
+        ", a.email " +
+        "from field_like a " +
+        "where 1=1 ";
+    if(fieldId) sql = sql + ' and field_id = ' + fieldId;
     return sql;
 };
 
-module.exports = {getFieldList, getFieldDetail, getFieldLike};
+//구장좋아요 insert
+const insertFieldLike = (fieldId:string, email:string)=> {
+    const sql = "insert into field_like ( like_id, field_id, email, insert_datetime, update_datetime  )" + 
+        "values ( (select ifnull(max(like_id) + 1, 1) from field_like b),  " + fieldId + ", " + email + ", now(), now())";
+    return sql;
+}
+
+//구장좋아요 delete
+const deleteFieldLike = (fieldId:string, email:string)=>{
+    const sql = "delete from field_like" +
+        "where field_id = " + fieldId +
+        " and email = " + email;
+    return sql;
+}
+
+//구장 예약 정보 조회
+const getReservation = (resvId: string, fieldId: string, email: string, resvDate: Date, resvTime:string, resvState:string) => {
+    let sql = "SELECT resv_id " + 
+        ", field_id " + 
+        ", email " +
+        ", resv_date " +
+        ", resv_time " +
+        ", resv_state " +
+        ", resv_price " +
+        ", remark_txt " +
+        ", insert_datetime " +
+        ", update_datetime " +
+        " from reservation " +
+        " where 1=1 ";
+    if(resvId) sql = sql + ' and resv_id = ' + resvId;
+    if(fieldId) sql = sql + ' and field_id = ' + fieldId;
+    if(email) sql = sql + ' and email = ' + email;
+    if(resvDate) sql = sql + ' and resv_date = ' + resvDate;
+    if(resvTime) sql = sql + ' and resv_time = ' + resvTime;
+    if(resvState) sql = sql + ' and resv_state = ' + resvState;
+    return sql;
+}
+
+//구장 예약 insert
+const insertReservation  = (fieldId:string, email:string, resvDate: Date, resvTime: string, resvState: string, resvPrice: number, remarkTxt: string)=>{
+    const sql = "INSERT INTO reservation " + 
+        "(resv_id, field_id, email, resv_date, resv_time, resv_state, resv_price, remark_txt, insert_datetime, update_datetime) " +
+        " VALUES " +
+        "((SELECT IFNULL(MAX(resv_id) + 1, 1) FROM reservation b), " +
+        fieldId + ", " +  
+        email + ", " + 
+        resvDate + ", " + 
+        resvTime + ", " +
+        resvState + ", " +
+        resvPrice + ", " +
+        remarkTxt + " , " +
+        "now(), now())";
+    return sql;
+}
+
+module.exports = {getFieldList, getFieldDetail, insertField, getFieldLike, insertFieldLike, deleteFieldLike, getReservation, insertReservation};
