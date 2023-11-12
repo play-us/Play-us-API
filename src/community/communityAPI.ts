@@ -293,7 +293,7 @@ community.post('/updateCommunity', async (req: express.Request, res: express.Res
 *           content:
 *             application/json:
 */
-community.post('/deleteCommunity', async (req: express.Request, res: express.Response) => {
+community.delete('/deleteCommunity', async (req: express.Request, res: express.Response) => {
   try {
     const param = JSON.parse(JSON.stringify(req.params));
     const communityDB = require('../community/communityDB');
@@ -473,7 +473,7 @@ community.post('/updateCommunityComment', async (req: express.Request, res: expr
 *           content:
 *             application/json:
 */
-community.post('/deleteCommunityComment', async (req: express.Request, res: express.Response) => {
+community.delete('/deleteCommunityComment', async (req: express.Request, res: express.Response) => {
   try {
     const param = JSON.parse(JSON.stringify(req.params));
     const communityDB = require('../community/communityDB');

@@ -228,4 +228,4 @@ const deleteReservation  = (resvId:string)=>{
     return sql;
 }
 
-module.exports = {getFieldList, getFieldDetail, insertField, updateField, deleteField, getFieldLike, insertFieldLike, deleteFieldLike, getReservation, insertReservation};
+module.exports = {getFieldList, getFieldDetail, insertField, updateField, deleteField, getFieldLike, insertFieldLike, deleteFieldLike, getReservation, insertReservation, deleteReservation};

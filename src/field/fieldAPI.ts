@@ -210,7 +210,7 @@ field.get('/getFieldDetail', async (req: express.Request, res: express.Response)
 *           content:
 *             application/json:
 */
-field.get('/insertField', async (req: express.Request, res: express.Response) => {
+field.post('/insertField', async (req: express.Request, res: express.Response) => {
     try {
       const param = JSON.parse(JSON.stringify(req.params));
       const fieldDB = require('../field/fieldDB');
@@ -335,7 +335,7 @@ field.get('/insertField', async (req: express.Request, res: express.Response) =>
 *           content:
 *             application/json:
 */
-field.get('/updateField', async (req: express.Request, res: express.Response) => {
+field.post('/updateField', async (req: express.Request, res: express.Response) => {
     try {
       const param = JSON.parse(JSON.stringify(req.params));
       const fieldDB = require('../field/fieldDB');
@@ -386,7 +386,7 @@ field.get('/updateField', async (req: express.Request, res: express.Response) =>
 *           content:
 *             application/json:
 */
-field.get('/deleteField', async (req: express.Request, res: express.Response) => {
+field.delete('/deleteField', async (req: express.Request, res: express.Response) => {
   try {
     const param = JSON.parse(JSON.stringify(req.params));
     const fieldDB = require('../field/fieldDB');
@@ -502,6 +502,42 @@ field.get('/getReservation', async (req: express.Request, res: express.Response)
     const resvState = param['resvState'] || null;
 
     let sql = fieldDB.getReservation(resvId, fieldId, email, resvDate, resvStartTime, resvEndTime, resvState);
+    const rows = await db.query(sql)
+    const conn = await db.getConnection();
+    conn.release();
+    if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
+    else throw console.log('에러발생');
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/**
+*  @swagger
+*  paths:
+*   /field/deleteReservation:
+*     get:
+*       summary: 구장 예약 삭제
+*       tags: [FIELD]
+*       parameters:
+*        - in: query
+*          name: email
+*          required: false
+*          description: 예약ID
+*          type: string
+*       responses:
+*         "200":
+*           description: field like.
+*           content:
+*             application/json:
+*/
+field.delete('/deleteReservation', async (req: express.Request, res: express.Response) => {
+  try {
+    const param = JSON.parse(JSON.stringify(req.params));
+    const fieldDB = require('../field/fieldDB');
+    const resvId = param['resvId'] || null;
+
+    let sql = fieldDB.getReservation(resvId);
     const rows = await db.query(sql)
     const conn = await db.getConnection();
     conn.release();
