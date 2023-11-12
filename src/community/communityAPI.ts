@@ -336,6 +336,7 @@ community.delete('/deleteCommunity', async (req: express.Request, res: express.R
     const param = JSON.parse(JSON.stringify(req.query));
     const communityDB = require('../community/communityDB');
     const commuId = param['commuId'];
+    await db.query(communityDB.deleteCommunityWishAll(commuId));
     await db.query(communityDB.deleteCommunityCommentAll(commuId));
     let sql = communityDB.deleteCommunity(commuId);
     const rows = await db.query(sql)

@@ -167,4 +167,9 @@ const deleteCommunityWish = (commuId:string, email:string)=>{
     return sql;
 }
 
-module.exports = {getCommunityList, getCommunityDetail, insertCommunity, updateCommunity, deleteCommunity, getCommunityCommentList, insertCommunityComment, updateCommunityCommnet, deleteCommunitycomment, deleteCommunityCommentAll};
+//커뮤니티좋아요 삭제ALL
+const deleteCommunityWishAll = (commuId:string)=> {
+    const sql = "DELETE FROM community_wish where commu_id = '" + commuId + "'";
+    return sql;
+}
+module.exports = {getCommunityList, getCommunityDetail, insertCommunity, updateCommunity, deleteCommunity, getCommunityCommentList, insertCommunityComment, updateCommunityCommnet, deleteCommunitycomment, deleteCommunityCommentAll, insertCommunityWish, deleteCommunityWish, deleteCommunityWishAll};
