@@ -45,7 +45,7 @@ const mypage = express();
 
 mypage.get('/getWishList', async(req: express.Request,res:express.Response)=>{  
     try{
-        const param = JSON.parse(JSON.stringify(req.params));
+        const param = JSON.parse(JSON.stringify(req.query));
         const fieldDB = require('../mypage/mypageDB'); 
         const fieldId = param['fieldId'];
         const fieldTp = param['fieldTp'];

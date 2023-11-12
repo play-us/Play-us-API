@@ -58,7 +58,7 @@ const field = express();
 */
 field.get('/getFieldList', async (req: express.Request, res: express.Response) => {
   try {
-    const param = JSON.parse(JSON.stringify(req.params));
+    const param = JSON.parse(JSON.stringify(req.query));
     const fieldDB = require('../field/fieldDB');
     const fieldId = param['fieldId'] || null;
     const fieldTp = param['fieldTp'] || null;
@@ -105,7 +105,7 @@ field.get('/getFieldList', async (req: express.Request, res: express.Response) =
 */
 field.get('/getFieldDetail', async (req: express.Request, res: express.Response) => {
     try {
-      const param = JSON.parse(JSON.stringify(req.params));
+      const param = JSON.parse(JSON.stringify(req.query));
       const fieldDB = require('../field/fieldDB');
       const fieldId = param['fieldId'] || null;
       const email = param['email'] || null;
@@ -212,7 +212,7 @@ field.get('/getFieldDetail', async (req: express.Request, res: express.Response)
 */
 field.post('/insertField', async (req: express.Request, res: express.Response) => {
     try {
-      const param = JSON.parse(JSON.stringify(req.params));
+      const param = JSON.parse(JSON.stringify(req.query));
       const fieldDB = require('../field/fieldDB');
       const fieldNm = param['fieldNm'] || null;
       const fieldTp = param['fieldTp'] || null;
@@ -337,7 +337,7 @@ field.post('/insertField', async (req: express.Request, res: express.Response) =
 */
 field.post('/updateField', async (req: express.Request, res: express.Response) => {
     try {
-      const param = JSON.parse(JSON.stringify(req.params));
+      const param = JSON.parse(JSON.stringify(req.query));
       const fieldDB = require('../field/fieldDB');
       const fieldId = param['fieldId'] || null;
       const fieldNm = param['fieldNm'] || null;
@@ -388,7 +388,7 @@ field.post('/updateField', async (req: express.Request, res: express.Response) =
 */
 field.delete('/deleteField', async (req: express.Request, res: express.Response) => {
   try {
-    const param = JSON.parse(JSON.stringify(req.params));
+    const param = JSON.parse(JSON.stringify(req.query));
     const fieldDB = require('../field/fieldDB');
     const fieldId = param['fieldId'] || null;
 
@@ -424,7 +424,7 @@ field.delete('/deleteField', async (req: express.Request, res: express.Response)
 */
 field.get('/getFieldLike', async (req: express.Request, res: express.Response) => {
   try {
-    const param = JSON.parse(JSON.stringify(req.params));
+    const param = JSON.parse(JSON.stringify(req.query));
     const fieldDB = require('../field/fieldDB');
     const fieldId = param['fieldId'] || null;
     const email = param['email'] || null;
@@ -491,7 +491,7 @@ field.get('/getFieldLike', async (req: express.Request, res: express.Response) =
 */
 field.get('/getReservation', async (req: express.Request, res: express.Response) => {
   try {
-    const param = JSON.parse(JSON.stringify(req.params));
+    const param = JSON.parse(JSON.stringify(req.query));
     const fieldDB = require('../field/fieldDB');
     const resvId = param['resvId'] || null;
     const fieldId = param['fieldId'] || null;
@@ -533,7 +533,7 @@ field.get('/getReservation', async (req: express.Request, res: express.Response)
 */
 field.delete('/deleteReservation', async (req: express.Request, res: express.Response) => {
   try {
-    const param = JSON.parse(JSON.stringify(req.params));
+    const param = JSON.parse(JSON.stringify(req.query));
     const fieldDB = require('../field/fieldDB');
     const resvId = param['resvId'] || null;
 

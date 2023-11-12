@@ -53,7 +53,7 @@ const community = express();
 */
 community.get('/getCommunityList', async (req: express.Request, res: express.Response) => {
     try {
-      const param = JSON.parse(JSON.stringify(req.params));
+      const param = JSON.parse(JSON.stringify(req.query));
       const communityDB = require('../community/communityDB');
       const fieldTp = param['fieldTp'];
       const area = param['area'];
@@ -98,7 +98,7 @@ community.get('/getCommunityList', async (req: express.Request, res: express.Res
 */
 community.get('/getCommunityDetail', async (req: express.Request, res: express.Response) => {
     try {
-      const param = JSON.parse(JSON.stringify(req.params));
+      const param = JSON.parse(JSON.stringify(req.query));
       const communityDB = require('../community/communityDB');
       const commuId = param['commuId'];
       const email = param['email'];
@@ -170,7 +170,7 @@ community.get('/getCommunityDetail', async (req: express.Request, res: express.R
 */
 community.post('/insertCommunity', async (req: express.Request, res: express.Response) => {
   try {
-    const param = JSON.parse(JSON.stringify(req.params));
+    const param = JSON.parse(JSON.stringify(req.query));
     const communityDB = require('../community/communityDB');
     const commuTitle = param['commuTitle'];
     const commuTxt = param['commuTxt'];
@@ -252,7 +252,7 @@ community.post('/insertCommunity', async (req: express.Request, res: express.Res
 */
 community.post('/updateCommunity', async (req: express.Request, res: express.Response) => {
   try {
-    const param = JSON.parse(JSON.stringify(req.params));
+    const param = JSON.parse(JSON.stringify(req.query));
     const communityDB = require('../community/communityDB');
     const commuId = param['commuId'];
     const commuTitle = param['commuTitle'];
@@ -295,7 +295,7 @@ community.post('/updateCommunity', async (req: express.Request, res: express.Res
 */
 community.delete('/deleteCommunity', async (req: express.Request, res: express.Response) => {
   try {
-    const param = JSON.parse(JSON.stringify(req.params));
+    const param = JSON.parse(JSON.stringify(req.query));
     const communityDB = require('../community/communityDB');
     const commuId = param['commuId'];
 
@@ -346,7 +346,7 @@ community.delete('/deleteCommunity', async (req: express.Request, res: express.R
 */
 community.get('/getCommunityCommentList', async (req: express.Request, res: express.Response) => {
     try {
-      const param = JSON.parse(JSON.stringify(req.params));
+      const param = JSON.parse(JSON.stringify(req.query));
       const communityDB = require('../community/communityDB');
       const commuId = param['commuId'];
       const email = param['email'];
@@ -395,7 +395,7 @@ community.get('/getCommunityCommentList', async (req: express.Request, res: expr
 */
 community.post('/insertCommunityComment', async (req: express.Request, res: express.Response) => {
   try {
-    const param = JSON.parse(JSON.stringify(req.params));
+    const param = JSON.parse(JSON.stringify(req.query));
     const communityDB = require('../community/communityDB');
     const commuId = param['commuId'];
     const commentTxt = param['commentTxt'];
@@ -438,7 +438,7 @@ community.post('/insertCommunityComment', async (req: express.Request, res: expr
 */
 community.post('/updateCommunityComment', async (req: express.Request, res: express.Response) => {
   try {
-    const param = JSON.parse(JSON.stringify(req.params));
+    const param = JSON.parse(JSON.stringify(req.query));
     const communityDB = require('../community/communityDB');
     const commentId = param['commentId'];
     const commentTxt = param['commentTxt'];
@@ -475,7 +475,7 @@ community.post('/updateCommunityComment', async (req: express.Request, res: expr
 */
 community.delete('/deleteCommunityComment', async (req: express.Request, res: express.Response) => {
   try {
-    const param = JSON.parse(JSON.stringify(req.params));
+    const param = JSON.parse(JSON.stringify(req.query));
     const communityDB = require('../community/communityDB');
     const commentId = param['commentId'];
     const commentTxt = param['commentTxt'];

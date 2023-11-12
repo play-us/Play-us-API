@@ -78,7 +78,7 @@ main.get('/getMainData', async (req: express.Request, res: express.Response) => 
         fieldList: null,
         commuList: null
     };
-    const param = JSON.parse(JSON.stringify(req.params));
+    const param = JSON.parse(JSON.stringify(req.query));
     const commonDB = require('../common/commonDB');
     const fieldDB = require('../field/fieldDB');
     const commuDB = require('../community/communityDB');
