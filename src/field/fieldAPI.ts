@@ -95,4 +95,40 @@ field.get('/getFieldDetail', async (req: express.Request, res: express.Response)
       console.log(err);
     }
   });
+
+  /**
+*  @swagger
+*  paths:
+*   /field/getFieldLike:
+*     get:
+*       summary: 구장좋아요 조회
+*       tags: [FIELD]
+*       parameters:
+*        - in: query
+*          name: fieldId
+*          required: false
+*          description: 구장ID
+*          type: string
+*       responses:
+*         "200":
+*           description: field like.
+*           content:
+*             application/json:
+*/
+field.get('/getFieldLike', async (req: express.Request, res: express.Response) => {
+  try {
+    const param = JSON.parse(JSON.stringify(req.params));
+    const fieldDB = require('../field/fieldDB');
+    const fieldId = param['fieldId'];
+    let sql = fieldDB.getFieldLike(fieldId);
+    const rows = await db.query(sql)
+    const conn = await db.getConnection();
+    conn.release();
+    if (rows) return res.status(200).json({ result: camelsKeys(rows) });
+    else throw console.log('에러발생');
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 module.exports = field;
