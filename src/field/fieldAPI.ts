@@ -60,13 +60,13 @@ field.get('/getFieldList', async (req: express.Request, res: express.Response) =
   try {
     const param = JSON.parse(JSON.stringify(req.params));
     const fieldDB = require('../field/fieldDB');
-    const fieldId = param['fieldId'];
-    const fieldTp = param['fieldTp'];
-    const area = param['area'];
-    const searchTxt = param['searchTxt'];
-    const sort = param['sort'];
-    const pageStart = param['pageStart'];
-    const pageEnd = param['pageEnd'];
+    const fieldId = param['fieldId'] || null;
+    const fieldTp = param['fieldTp'] || null;
+    const area = param['area'] || null;
+    const searchTxt = param['searchTxt'] || null;
+    const sort = param['sort'] || null;
+    const pageStart = param['pageStart'] || null;
+    const pageEnd = param['pageEnd'] || null;
 
     let sql = fieldDB.getFieldList(fieldId, fieldTp, area, searchTxt, sort, pageStart, pageEnd);
     const rows = await db.query(sql);
@@ -107,8 +107,8 @@ field.get('/getFieldDetail', async (req: express.Request, res: express.Response)
     try {
       const param = JSON.parse(JSON.stringify(req.params));
       const fieldDB = require('../field/fieldDB');
-      const fieldId = param['fieldId'];
-      const email = param['email'];
+      const fieldId = param['fieldId'] || null;
+      const email = param['email'] || null;
 
       let sql = fieldDB.getFieldDetail(fieldId, email);
       const rows = await db.query(sql)
@@ -144,8 +144,10 @@ field.get('/getFieldLike', async (req: express.Request, res: express.Response) =
   try {
     const param = JSON.parse(JSON.stringify(req.params));
     const fieldDB = require('../field/fieldDB');
-    const fieldId = param['fieldId'];
-    let sql = fieldDB.getFieldLike(fieldId);
+    const fieldId = param['fieldId'] || null;
+    const email = param['email'] || null;
+
+    let sql = fieldDB.getFieldLike(fieldId, email);
     const rows = await db.query(sql)
     const conn = await db.getConnection();
     conn.release();
