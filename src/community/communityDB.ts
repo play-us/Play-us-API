@@ -45,7 +45,7 @@ const getCommunityDetail = (commuId:string, email:string)=>{
     return sql;
 };
 
-//커뮤니디 등록
+//커뮤니티 등록
 const insertCommunity = (commuTitle:string, commuTxt:string, email:string, area:string, deadLine:Date, memberCnt:number, fieldTp:string) =>{
     const sql = "INSERT INTO community ( '" + 
     "commu_id" + "', " +
@@ -68,6 +68,28 @@ const insertCommunity = (commuTitle:string, commuTxt:string, email:string, area:
     memberCnt + "', '" +
     fieldTp + "', '" +
     "NOW(), NOW() )";
+    return sql;
+}
+
+//커뮤니티 수정
+const updateCommunity = (commuId:string, commuTitle:string, commuTxt:string, email:string, area:string, deadLine:Date, memberCnt:number, fieldTp:string) =>{
+    const sql = "UPDATE community set " + 
+    "commu_title = '" + commuTitle + "', " +
+    "commu_txt = '" + commuTitle + "', " +
+    "email = '" + email + "', " +
+    "area = '" + area + "', " +
+    "dead_line = '" + deadLine + "', " +
+    "member_cnt = " + memberCnt + ", " +
+    "field_tp = '" + fieldTp + "', " +
+    "update_datetime = now() " +
+    "WHERE commu_id = '" + commuId + "'";
+    return sql;
+}
+
+//커뮤니티 삭제
+const deleteCommunity = (commuId:string)=> {
+    const sql = "DELETE FROM community where commu_id = '" + commuId + "'";
+    return sql;
 }
 
 //커뮤니티 댓글리스트 조회
