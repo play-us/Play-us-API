@@ -1,6 +1,6 @@
 const getFieldList = (fieldId:string, fieldTp:string, area:string, searchTxt:string)=>{
     let sql = 'SELECT *' +
-    'FROM field A ' + 
+    'FROM field ' + 
     ' WHERE 1=1'; 
     if(fieldId) sql + ' and field_id = ' + fieldId;
     if(fieldTp) sql + ' and field_tp = ' + fieldTp;

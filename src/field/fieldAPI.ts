@@ -89,7 +89,7 @@ field.get('/getFieldDetail', async (req: express.Request, res: express.Response)
       const rows = await db.query(sql)
       const conn = await db.getConnection();
       conn.release();
-      if (rows) return res.status(200).json({ result: camelsKeys(rows) });
+      if (rows) return res.status(200).json({ result: camelsKeys(rows[0])});
       else throw console.log('에러발생');
     } catch (err) {
       console.log(err);
