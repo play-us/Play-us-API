@@ -31,4 +31,8 @@ app.use('/field', field)
 const community = require('./community/communityAPI')
 app.use('/community', community)
 
+//mypage
+const mypage = require('./mypage/mypageAPI')
+app.use('/mypage', mypage)
+
 app.listen(8080)
