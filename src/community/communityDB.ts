@@ -125,9 +125,9 @@ const insertCommunityComment = (commuId:string, commentTxt:string, email:string)
     "insert_datetime, " +
     "update_datetime " +
     "VALUES (" + 
-    "(select ifnull(max(comment_id) + 1, 1) from community_comment b), '" + 
+    "(select ifnull(max(b.comment_id) + 1, 1) from community_comment b), '" + 
     commuId + "', " + 
-    "(select ifnull(max(comment_seq) + 1, 1) from community_comment b where b.commu_id = '" + commuId + "), '" + 
+    "(select ifnull(max(c.comment_seq) + 1, 1) from community_comment c where c.commu_id = '" + commuId + "'), '" + 
     email + "', '" +
     commentTxt + "', " +
     "now(), now()) ";
