@@ -146,5 +146,25 @@ const deleteCommunitycomment = (commentId:string)=> {
     const sql = "DELETE FROM community_comment where comment_id = '" + commentId + "'";
     return sql;
 }
+//커뮤니티댓글 삭제ALL
+const deleteCommunityCommentAll = (commuId:string)=> {
+    const sql = "DELETE FROM community_comment where commu_id = '" + commuId + "'";
+    return sql;
+}
 
-module.exports = {getCommunityList, getCommunityDetail, insertCommunity, getCommunityCommentList, insertCommunityComment, updateCommunityCommnet, deleteCommunitycomment};
+//커뮤니티좋아요 insert
+const insertCommunityWish = (commuId:string, email:string)=> {
+    const sql = "insert into community_wish ( wish_id, commu_id, email, insert_datetime, update_datetime  )" + 
+        "values ( (select ifnull(max(wish_id) + 1, 1) from community_wish b),  '" + commuId + "', '" + email + "', now(), now())";
+    return sql;
+}
+
+//커뮤니티좋아요 delete
+const deleteCommunityWish = (commuId:string, email:string)=>{
+    const sql = "delete from community_wish" +
+        "where commu_id = '" + commuId + "' " + 
+        " and email = '" + email + "'";
+    return sql;
+}
+
+module.exports = {getCommunityList, getCommunityDetail, insertCommunity, updateCommunity, deleteCommunity, getCommunityCommentList, insertCommunityComment, updateCommunityCommnet, deleteCommunitycomment, deleteCommunityCommentAll};

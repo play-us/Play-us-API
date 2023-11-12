@@ -2,8 +2,13 @@ import express from 'express';
 import dotenv from 'dotenv';
 import camelsKeys from "camelcase-keys";
 import db from '../db';
+import {FieldPacket, OkPacket, ProcedureCallPacket, ResultSetHeader, RowDataPacket} from 'mysql2/promise';
 dotenv.config();
 const community = express();
+
+interface queryType {
+  tp : [OkPacket | RowDataPacket[] | ResultSetHeader[] | RowDataPacket[][] | OkPacket[] | ProcedureCallPacket, FieldPacket[]] | any | null
+}
 
 /**
 *  @swagger
@@ -96,25 +101,52 @@ community.get('/getCommunityList', async (req: express.Request, res: express.Res
 *          required: false
 *          description: 이메일
 *          type: string
+*        - in: query
+*          name: commentPageStart
+*          required: false
+*          description: 댓글페이지시작
+*          type: number
+*        - in: query
+*          name: commentPageEnd
+*          required: false
+*          description: 댓글페이지끝
+*          type: number
 *       responses:
 *         "200":
 *           description: field.
 *           content:
 *             application/json:
 */
+interface commuDeatailDataMap {
+  communityDetail: queryType['tp'],
+  commentList: queryType['tp']
+}
 community.get('/getCommunityDetail', async (req: express.Request, res: express.Response) => {
     try {
+      let resultMap:commuDeatailDataMap = {
+        communityDetail: null,
+        commentList: null
+      };
       const param = JSON.parse(JSON.stringify(req.query));
       const communityDB = require('../community/communityDB');
       const commuId = param['commuId'];
       const email = param['email'];
+      const commentPageStart = param['commentPageStart'];
+      const commentPageEnd = param['commentPageEnd'];
 
-      let sql = communityDB.getCommunityDetail(commuId, email);
-      const rows = await db.query(sql)
-      const conn = await db.getConnection();
-      conn.release();
-      if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
-      else throw console.log('에러발생');
+      //커뮤니티상세
+      const communityDetailSql = communityDB.getCommunityDetail(commuId, email);
+      const communityDetail = await db.query(communityDetailSql); 
+      resultMap.communityDetail= camelsKeys(communityDetail[0]);
+
+      //댓글리스트
+      const commentListSql = communityDB.getCommunityCommentList(commuId, email, commentPageStart, commentPageEnd);
+      const commentList = await db.query(commentListSql); 
+      resultMap.commentList= camelsKeys(commentList[0]);
+
+      const conn = await db.getConnection(); 
+      conn.release(); 
+      return res.status(200).json({ result: resultMap });
     } catch (err) {
       console.log(err);
     }
@@ -304,7 +336,7 @@ community.delete('/deleteCommunity', async (req: express.Request, res: express.R
     const param = JSON.parse(JSON.stringify(req.query));
     const communityDB = require('../community/communityDB');
     const commuId = param['commuId'];
-
+    await db.query(communityDB.deleteCommunityCommentAll(commuId));
     let sql = communityDB.deleteCommunity(commuId);
     const rows = await db.query(sql)
     const conn = await db.getConnection();
@@ -484,9 +516,60 @@ community.delete('/deleteCommunityComment', async (req: express.Request, res: ex
     const param = JSON.parse(JSON.stringify(req.query));
     const communityDB = require('../community/communityDB');
     const commentId = param['commentId'];
-    const commentTxt = param['commentTxt'];
 
     let sql = communityDB.deleteCommunityComment(commentId);
+    const rows = await db.query(sql)
+    const conn = await db.getConnection();
+    conn.release();
+    if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
+    else throw console.log('에러발생');
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/**
+*  @swagger
+*  paths:
+*   /community/communityWish:
+*     post:
+*       summary: 커뮤니티 관심
+*       tags: [COMMUNITY]
+*       parameters:
+*        - in: query
+*          name: commuId
+*          required: true
+*          description: 커뮤니티ID
+*          type: string
+*        - in: query
+*          name: email
+*          required: true
+*          description: 이메일
+*          type: string
+*        - in: query
+*          name: state
+*          required: true
+*          description: 관심상태 (1 관심, 0 관심취소)
+*          type: string
+*       responses:
+*         "200":
+*           description: field like.
+*           content:
+*             application/json:
+*/
+community.post('/communityWish', async (req: express.Request, res: express.Response) => {
+  try {
+    const param = JSON.parse(JSON.stringify(req.query));
+    const communityDB = require('../community/communityDB');
+    const commuId = param['commuId'];
+    const email = param['email'];
+    const state = param['state'];
+    let sql;
+    if(state === '1') {
+      sql = communityDB.insertCommunityWish(commuId, email);
+    } else {
+      sql = communityDB.deleteCommunityWish(commuId, email);
+    }
     const rows = await db.query(sql)
     const conn = await db.getConnection();
     conn.release();
