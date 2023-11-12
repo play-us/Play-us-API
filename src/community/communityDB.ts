@@ -59,14 +59,14 @@ const insertCommunity = (commuTitle:string, commuTxt:string, email:string, area:
     "insert_datetime" + ", " +
     "update_datetime" + ") " +
     "VALUES ( " +
-    "(select ifnull(max(commu_id) + 1, 1) from community b), " + 
+    "(select ifnull(max(commu_id) + 1, 1) from community b), '" + 
     commuTitle + "', '" +
     commuTxt + "', '" +
     email + "', '" +
     area + "', '" +
     deadLine + "', '" +
     memberCnt + "', '" +
-    fieldTp + "', '" +
+    fieldTp + "', " +
     "NOW(), NOW() )";
     return sql;
 }

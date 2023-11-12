@@ -258,7 +258,7 @@ community.post('/insertCommunity', async (req: express.Request, res: express.Res
 */
 community.post('/updateCommunity', async (req: express.Request, res: express.Response) => {
   try {
-    const param = JSON.parse(JSON.stringify(req.query));
+    const param = JSON.parse(JSON.stringify(req.body));
     const communityDB = require('../community/communityDB');
     const commuId = param['commuId'];
     const commuTitle = param['commuTitle'];
@@ -401,7 +401,7 @@ community.get('/getCommunityCommentList', async (req: express.Request, res: expr
 */
 community.post('/insertCommunityComment', async (req: express.Request, res: express.Response) => {
   try {
-    const param = JSON.parse(JSON.stringify(req.query));
+    const param = JSON.parse(JSON.stringify(req.body));
     const communityDB = require('../community/communityDB');
     const commuId = param['commuId'];
     const commentTxt = param['commentTxt'];
@@ -444,7 +444,7 @@ community.post('/insertCommunityComment', async (req: express.Request, res: expr
 */
 community.post('/updateCommunityComment', async (req: express.Request, res: express.Response) => {
   try {
-    const param = JSON.parse(JSON.stringify(req.query));
+    const param = JSON.parse(JSON.stringify(req.body));
     const communityDB = require('../community/communityDB');
     const commentId = param['commentId'];
     const commentTxt = param['commentTxt'];

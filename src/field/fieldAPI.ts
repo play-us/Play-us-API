@@ -212,7 +212,7 @@ field.get('/getFieldDetail', async (req: express.Request, res: express.Response)
 */
 field.post('/insertField', async (req: express.Request, res: express.Response) => {
     try {
-      const param = JSON.parse(JSON.stringify(req.query));
+      const param = JSON.parse(JSON.stringify(req.body));
       const fieldDB = require('../field/fieldDB');
       const fieldNm = param['fieldNm'] || null;
       const fieldTp = param['fieldTp'] || null;
@@ -337,7 +337,7 @@ field.post('/insertField', async (req: express.Request, res: express.Response) =
 */
 field.post('/updateField', async (req: express.Request, res: express.Response) => {
     try {
-      const param = JSON.parse(JSON.stringify(req.query));
+      const param = JSON.parse(JSON.stringify(req.body));
       const fieldDB = require('../field/fieldDB');
       const fieldId = param['fieldId'] || null;
       const fieldNm = param['fieldNm'] || null;
@@ -471,7 +471,7 @@ field.get('/getFieldLike', async (req: express.Request, res: express.Response) =
 */
 field.post('/fieldLike', async (req: express.Request, res: express.Response) => {
   try {
-    const param = JSON.parse(JSON.stringify(req.query));
+    const param = JSON.parse(JSON.stringify(req.body));
     const fieldDB = require('../field/fieldDB');
     const fieldId = param['fieldId'];
     const email = param['email'];
