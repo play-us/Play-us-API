@@ -180,7 +180,7 @@ community.post('/insertCommunity', async (req: express.Request, res: express.Res
     const communityDB = require('../community/communityDB');
     const commuTitle = param['commuTitle'];
     const commuTxt = param['commuTxt'];
-    const email = param['email'];
+    const email = param['email'] || 'chu';
     const area = param['area'];
     const deadLine = param['deadLine']; 
     const memberCnt = param['memberCnt']; 
@@ -263,7 +263,7 @@ community.post('/updateCommunity', async (req: express.Request, res: express.Res
     const commuId = param['commuId'];
     const commuTitle = param['commuTitle'];
     const commuTxt = param['commuTxt'];
-    const email = param['email'];
+    const email = param['email'] || 'chu';
     const area = param['area'];
     const deadLine = param['deadLine']; 
     const memberCnt = param['memberCnt']; 
@@ -405,7 +405,7 @@ community.post('/insertCommunityComment', async (req: express.Request, res: expr
     const communityDB = require('../community/communityDB');
     const commuId = param['commuId'];
     const commentTxt = param['commentTxt'];
-    const email = param['email'];
+    const email = param['email'] || 'chu';
 
     let sql = communityDB.insertCommunityComment(commuId, commentTxt, email);
     const rows = await db.query(sql)
