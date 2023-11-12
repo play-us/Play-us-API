@@ -121,6 +121,288 @@ field.get('/getFieldDetail', async (req: express.Request, res: express.Response)
     }
   });
 
+/**
+*  @swagger
+*  paths:
+*   /field/insertField:
+*     get:
+*       summary: 구장 등록
+*       tags: [FIELD]
+*       parameters:
+*        - in: query
+*          name: fieldNm
+*          required: true
+*          description: 구장명
+*          type: string
+*        - in: query
+*          name: fieldTp
+*          required: true
+*          description: 구장구분(SYS002)
+*          type: string
+*        - in: query
+*          name: area
+*          required: true
+*          description: 지역(SYS006)
+*          type: string
+*        - in: query
+*          name: addr
+*          required: true
+*          description: 주소
+*          type: string
+*        - in: query
+*          name: lat
+*          required: true
+*          description: 위도
+*          type: number
+*        - in: query
+*          name: lng
+*          required: true
+*          description: 경도
+*          type: number
+*        - in: query
+*          name: openingHours
+*          required: true
+*          description: 운영시작시간 (HH:MM:SS)
+*          type: string
+*        - in: query
+*          name: closingHours
+*          required: true
+*          description: 운영종료시간 (HH:MM:SS)
+*          type: string
+*        - in: query
+*          name: price
+*          required: true
+*          description: 시간당 가격
+*          type: number
+*        - in: query
+*          name: hours
+*          required: true
+*          description: 예약시간단위
+*          type: string
+*        - in: query
+*          name: note
+*          required: true
+*          description: 구장정보
+*          type: string
+*        - in: query
+*          name: size
+*          required: true
+*          description: 구장 사이즈
+*          type: string
+*        - in: query
+*          name: swrmYn
+*          required: true
+*          description: 샤워실여부(SYS001)
+*          type: string
+*        - in: query
+*          name: parkingTp
+*          required: true
+*          description: 주차구분(SYS004)
+*          type: string
+*        - in: query
+*          name: rentalSup
+*          required: false
+*          description: 대여용품
+*          type: string
+*       responses:
+*         "200":
+*           description: field.
+*           content:
+*             application/json:
+*/
+field.get('/insertField', async (req: express.Request, res: express.Response) => {
+    try {
+      const param = JSON.parse(JSON.stringify(req.params));
+      const fieldDB = require('../field/fieldDB');
+      const fieldNm = param['fieldNm'] || null;
+      const fieldTp = param['fieldTp'] || null;
+      const area = param['area'] || null;
+      const addr = param['addr'] || null;
+      const lat = param['lat'] || null;
+      const lng = param['lng'] || null;
+      const openingHours = param['openingHours'] || null;
+      const closingHours = param['closingHours'] || null;
+      const price = param['price'] || null;
+      const hours = param['hours'] || null;
+      const note = param['note'] || null;
+      const size = param['size'] || null;
+      const swrmYn = param['swrmYn'] || null;
+      const parkingTp = param['parkingTp'] || null;
+      const rentalSup = param['rentalSup'] || null;
+
+      let sql = fieldDB.insertField(fieldNm, fieldTp, area, addr, lat, lng, openingHours, closingHours, price, hours, note, size, swrmYn, parkingTp, rentalSup);
+      const rows = await db.query(sql)
+      const conn = await db.getConnection();
+      conn.release();
+      if (rows) return res.status(200).json({ result: camelsKeys(rows[0])});
+      else throw console.log('에러발생');
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+/**
+*  @swagger
+*  paths:
+*   /field/updateField:
+*     get:
+*       summary: 구장 수정
+*       tags: [FIELD]
+*       parameters:
+*        - in: query
+*          name: fieldId
+*          required: true
+*          description: 구장ID
+*          type: string
+*        - in: query
+*          name: fieldNm
+*          required: true
+*          description: 구장명
+*          type: string
+*        - in: query
+*          name: fieldTp
+*          required: true
+*          description: 구장구분(SYS002)
+*          type: string
+*        - in: query
+*          name: area
+*          required: true
+*          description: 지역(SYS006)
+*          type: string
+*        - in: query
+*          name: addr
+*          required: true
+*          description: 주소
+*          type: string
+*        - in: query
+*          name: lat
+*          required: true
+*          description: 위도
+*          type: number
+*        - in: query
+*          name: lng
+*          required: true
+*          description: 경도
+*          type: number
+*        - in: query
+*          name: openingHours
+*          required: true
+*          description: 운영시작시간 (HH:MM:SS)
+*          type: string
+*        - in: query
+*          name: closingHours
+*          required: true
+*          description: 운영종료시간 (HH:MM:SS)
+*          type: string
+*        - in: query
+*          name: price
+*          required: true
+*          description: 시간당 가격
+*          type: number
+*        - in: query
+*          name: hours
+*          required: true
+*          description: 예약시간단위
+*          type: string
+*        - in: query
+*          name: note
+*          required: true
+*          description: 구장정보
+*          type: string
+*        - in: query
+*          name: size
+*          required: true
+*          description: 구장 사이즈
+*          type: string
+*        - in: query
+*          name: swrmYn
+*          required: true
+*          description: 샤워실여부(SYS001)
+*          type: string
+*        - in: query
+*          name: parkingTp
+*          required: true
+*          description: 주차구분(SYS004)
+*          type: string
+*        - in: query
+*          name: rentalSup
+*          required: false
+*          description: 대여용품
+*          type: string
+*       responses:
+*         "200":
+*           description: field.
+*           content:
+*             application/json:
+*/
+field.get('/updateField', async (req: express.Request, res: express.Response) => {
+    try {
+      const param = JSON.parse(JSON.stringify(req.params));
+      const fieldDB = require('../field/fieldDB');
+      const fieldId = param['fieldId'] || null;
+      const fieldNm = param['fieldNm'] || null;
+      const fieldTp = param['fieldTp'] || null;
+      const area = param['area'] || null;
+      const addr = param['addr'] || null;
+      const lat = param['lat'] || null;
+      const lng = param['lng'] || null;
+      const openingHours = param['openingHours'] || null;
+      const closingHours = param['closingHours'] || null;
+      const price = param['price'] || null;
+      const hours = param['hours'] || null;
+      const note = param['note'] || null;
+      const size = param['size'] || null;
+      const swrmYn = param['swrmYn'] || null;
+      const parkingTp = param['parkingTp'] || null;
+      const rentalSup = param['rentalSup'] || null;
+
+      let sql = fieldDB.updateField(fieldId, fieldNm, fieldTp, area, addr, lat, lng, openingHours, closingHours, price, hours, note, size, swrmYn, parkingTp, rentalSup);
+      const rows = await db.query(sql)
+      const conn = await db.getConnection();
+      conn.release();
+      if (rows) return res.status(200).json({ result: camelsKeys(rows[0])});
+      else throw console.log('에러발생');
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  /**
+*  @swagger
+*  paths:
+*   /field/deleteField:
+*     get:
+*       summary: 구장 삭제
+*       tags: [FIELD]
+*       parameters:
+*        - in: query
+*          name: fieldId
+*          required: false
+*          description: 구장ID
+*          type: string
+*       responses:
+*         "200":
+*           description: field like.
+*           content:
+*             application/json:
+*/
+field.get('/deleteField', async (req: express.Request, res: express.Response) => {
+  try {
+    const param = JSON.parse(JSON.stringify(req.params));
+    const fieldDB = require('../field/fieldDB');
+    const fieldId = param['fieldId'] || null;
+
+    let sql = fieldDB.deleteField(fieldId);
+    const rows = await db.query(sql)
+    const conn = await db.getConnection();
+    conn.release();
+    if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
+    else throw console.log('에러발생');
+  } catch (err) {
+    console.log(err);
+  }
+});
+
   /**
 *  @swagger
 *  paths:

@@ -33,7 +33,7 @@ const getCommunityDetail = (commuId:string, email:string)=>{
         ", (select syscd_nm from sys_code x where x.class_cd = 'SYS006' and x.syscd_cd = a.area) as area " +
         ', a.dead_line ' +
         ', a.member_cnt ' +
-        ', a.remart_txt ' +
+        ', a.remark_txt ' +
         ', a.insert_datetime ' +
         ', a.update_datetime ' +
         ", (select count(1) from community_wish x where x.commu_id = a.commu_id) as wish_cnt " +
@@ -99,7 +99,6 @@ const getCommunityCommentList = (commuId:string, email:string, pageStart:number,
         ', a.comment_seq ' +
         ', a.email ' +
         ', a.comment_txt ' +
-        ', a.remart_txt ' +
         ', a.insert_datetime ' +
         ', a.update_datetime ' +
         "from community_comment a " +

@@ -79,8 +79,8 @@ const getFieldDetail = (fieldId:string, email:string)=>{
     return sql;
 };
 
-//구장 insert
-const insertField = (fieldId:string, fieldNm:string, fieldTp:string, area:string, addr:string, lat:number, lng:number, openingHours:string, closingHours:string, price:string, hours:string, note:string, size:string, swrmYn:string, parkingTp:string, rentalSup:string)=> {
+//구장 등록
+const insertField = (fieldNm:string, fieldTp:string, area:string, addr:string, lat:number, lng:number, openingHours:string, closingHours:string, price:string, hours:string, note:string, size:string, swrmYn:string, parkingTp:string, rentalSup:string)=> {
     const sql = "INSERT INTO field " +
         "field_id, " +
         "field_nm, " +
@@ -103,7 +103,7 @@ const insertField = (fieldId:string, fieldNm:string, fieldTp:string, area:string
         "insert_datetime, " +
         "update_datetime) " +
         " VALUES ('" +
-        fieldId + "' , '" +
+        "(SELECT IFNULL(MAX(field_id) + 1, 1) FROM field b), '" +
         fieldNm + "' , '" +
         fieldTp + "', '" +
         area + "', '" +
@@ -123,6 +123,36 @@ const insertField = (fieldId:string, fieldNm:string, fieldTp:string, area:string
         "NULL, now(), now())";
     return sql;
 }
+
+//구장 수정
+const updateField = (fieldId:string, fieldNm:string, fieldTp:string, area:string, addr:string, lat:number, lng:number, openingHours:string, closingHours:string, price:string, hours:string, note:string, size:string, swrmYn:string, parkingTp:string, rentalSup:string)=> {
+    const sql = "UPDATE field set " +
+    "field_nm = '" + fieldNm + "', " +
+    "field_tp = '" + fieldTp + "', " +
+    "area = '" + area + "', " +
+    "addr = '" + addr + "', " +
+    "lat = " + lat + ", " +
+    "lng = " + lng + ", " +
+    "opening_hours = '" + openingHours + "', " +
+    "closing_hours = '" + closingHours + "', " +
+    "price = " + price + ", " +
+    "hours = '" + hours + "', " +
+    "note = '" + note + "', " +
+    "size = '" + size + "', " +
+    "swrm_yn = '" + swrmYn + "', " +
+    "parking_tp = '" + parkingTp + "', " +
+    "rental_sup = '" + rentalSup + "', " +
+    "update_datetime = now() " +
+    "WHERE field_id = '" + fieldId + "'";
+    return sql;
+}
+
+//구장 삭제
+const deleteField = (fieldId:string)=> {
+    const sql = "DELETE FROM field where field_id = '" + fieldId + "'";
+    return sql;
+}
+
 
 //구장좋아요 조회
 const getFieldLike = (fieldId:string, email:string)=>{
@@ -191,4 +221,4 @@ const insertReservation  = (fieldId:string, email:string, resvDate: Date, resvTi
     return sql;
 }
 
-module.exports = {getFieldList, getFieldDetail, insertField, getFieldLike, insertFieldLike, deleteFieldLike, getReservation, insertReservation};
+module.exports = {getFieldList, getFieldDetail, insertField, updateField, deleteField, getFieldLike, insertFieldLike, deleteFieldLike, getReservation, insertReservation};
