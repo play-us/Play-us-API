@@ -168,7 +168,7 @@ community.get('/getCommunityDetail', async (req: express.Request, res: express.R
 *           content:
 *             application/json:
 */
-community.get('/insertCommunity', async (req: express.Request, res: express.Response) => {
+community.post('/insertCommunity', async (req: express.Request, res: express.Response) => {
   try {
     const param = JSON.parse(JSON.stringify(req.params));
     const communityDB = require('../community/communityDB');
@@ -250,7 +250,7 @@ community.get('/insertCommunity', async (req: express.Request, res: express.Resp
 *           content:
 *             application/json:
 */
-community.get('/updateCommunity', async (req: express.Request, res: express.Response) => {
+community.post('/updateCommunity', async (req: express.Request, res: express.Response) => {
   try {
     const param = JSON.parse(JSON.stringify(req.params));
     const communityDB = require('../community/communityDB');
@@ -293,7 +293,7 @@ community.get('/updateCommunity', async (req: express.Request, res: express.Resp
 *           content:
 *             application/json:
 */
-community.get('/deleteCommunity', async (req: express.Request, res: express.Response) => {
+community.post('/deleteCommunity', async (req: express.Request, res: express.Response) => {
   try {
     const param = JSON.parse(JSON.stringify(req.params));
     const communityDB = require('../community/communityDB');
@@ -393,7 +393,7 @@ community.get('/getCommunityCommentList', async (req: express.Request, res: expr
 *           content:
 *             application/json:
 */
-community.get('/insertCommunityComment', async (req: express.Request, res: express.Response) => {
+community.post('/insertCommunityComment', async (req: express.Request, res: express.Response) => {
   try {
     const param = JSON.parse(JSON.stringify(req.params));
     const communityDB = require('../community/communityDB');
@@ -436,7 +436,7 @@ community.get('/insertCommunityComment', async (req: express.Request, res: expre
 *           content:
 *             application/json:
 */
-community.get('/updateCommunityComment', async (req: express.Request, res: express.Response) => {
+community.post('/updateCommunityComment', async (req: express.Request, res: express.Response) => {
   try {
     const param = JSON.parse(JSON.stringify(req.params));
     const communityDB = require('../community/communityDB');
@@ -473,7 +473,7 @@ community.get('/updateCommunityComment', async (req: express.Request, res: expre
 *           content:
 *             application/json:
 */
-community.get('/deleteCommunityComment', async (req: express.Request, res: express.Response) => {
+community.post('/deleteCommunityComment', async (req: express.Request, res: express.Response) => {
   try {
     const param = JSON.parse(JSON.stringify(req.params));
     const communityDB = require('../community/communityDB');

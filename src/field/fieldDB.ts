@@ -205,7 +205,7 @@ const getReservation = (resvId: string, fieldId: string, email: string, resvDate
     return sql;
 }
 
-//구장 예약 insert
+//구장 예약 등록
 const insertReservation  = (fieldId:string, email:string, resvDate: Date, resvTime: string, resvState: string, resvPrice: number, remarkTxt: string)=>{
     const sql = "INSERT INTO reservation " + 
         "(resv_id, field_id, email, resv_date, resv_time, resv_state, resv_price, remark_txt, insert_datetime, update_datetime) " +
@@ -219,6 +219,12 @@ const insertReservation  = (fieldId:string, email:string, resvDate: Date, resvTi
         resvPrice + "', '" +
         remarkTxt + "', " +
         "now(), now())";
+    return sql;
+}
+
+//구장 예약 삭제
+const deleteReservation  = (resvId:string)=>{
+    const sql = "delete from  reservation where resv_id = '" + resvId + "'" ;
     return sql;
 }
 
