@@ -46,19 +46,19 @@ const getCommunityDetail = (commuId:string, email:string)=>{
 
 //커뮤니티 등록
 const insertCommunity = (commuTitle:string, commuTxt:string, email:string, area:string, deadLine:Date, memberCnt:number, fieldTp:string) =>{
-    const sql = "INSERT INTO community ( '" + 
-    "commu_id" + "', " +
-    "commu_title" + "', " +
-    "commu_Txt" + "', " +
-    "email" + "', " +
-    "area" + "', " +
-    "dead_line" + "', " +
-    "member_cnt" + "', " +
-    "field_tp" + "', " +
-    "insert_datetime" + "', " +
-    "update_datetime" + "') " +
+    const sql = "INSERT INTO community (" + 
+    "commu_id" + ", " +
+    "commu_title" + ", " +
+    "commu_Txt" + ", " +
+    "email" + ", " +
+    "area" + ", " +
+    "dead_line" + ", " +
+    "member_cnt" + ", " +
+    "field_tp" + ", " +
+    "insert_datetime" + ", " +
+    "update_datetime" + ") " +
     "VALUES ( " +
-    "(select ifnull(max(commu_id) + 1, 1) from community b), '" + 
+    "(select ifnull(max(commu_id) + 1, 1) from community b), " + 
     commuTitle + "', '" +
     commuTxt + "', '" +
     email + "', '" +
