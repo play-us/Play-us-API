@@ -8,7 +8,6 @@ const getCommunityList = (fieldTp:string, area:string, searchTxt:string, pageSta
         ', dead_line ' +
         ', member_cnt ' +
         ', field_tp ' +
-        ', remark_txt ' +
         ', insert_datetime ' +
         ', update_datetime ' +
         'FROM community ' + 

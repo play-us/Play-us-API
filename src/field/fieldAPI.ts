@@ -440,4 +440,76 @@ field.get('/getFieldLike', async (req: express.Request, res: express.Response) =
   }
 });
 
+/**
+*  @swagger
+*  paths:
+*   /field/getReservation:
+*     get:
+*       summary: 구장 예약정보 조회
+*       tags: [FIELD]
+*       parameters:
+*        - in: query
+*          name: fieldId
+*          required: false
+*          description: 구장ID
+*          type: string
+*        - in: query
+*          name: resvId
+*          required: false
+*          description: 이메일
+*          type: string
+*        - in: query
+*          name: email
+*          required: false
+*          description: 예약ID
+*          type: string
+*        - in: query
+*          name: resvDate
+*          required: false
+*          description: 예약일자
+*          type: Date
+*        - in: query
+*          name: resvStartTime
+*          required: false
+*          description: 예약시작시간 (HH:MM:SS)
+*          type: string
+*        - in: query
+*          name: resvEndTime
+*          required: false
+*          description: 예약종료시간 (HH:MM:SS)
+*          type: string
+*        - in: query
+*          name: resvState
+*          required: false
+*          description: 예약상태 (SYS007)
+*          type: string
+*       responses:
+*         "200":
+*           description: field like.
+*           content:
+*             application/json:
+*/
+field.get('/getReservation', async (req: express.Request, res: express.Response) => {
+  try {
+    const param = JSON.parse(JSON.stringify(req.params));
+    const fieldDB = require('../field/fieldDB');
+    const resvId = param['resvId'] || null;
+    const fieldId = param['fieldId'] || null;
+    const email = param['email'] || null;
+    const resvDate = param['resvDate'] || null;
+    const resvStartTime = param['resvStartTime'] || null;
+    const resvEndTime = param['resvEndTime'] || null;
+    const resvState = param['resvState'] || null;
+
+    let sql = fieldDB.getReservation(resvId, fieldId, email, resvDate, resvStartTime, resvEndTime, resvState);
+    const rows = await db.query(sql)
+    const conn = await db.getConnection();
+    conn.release();
+    if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
+    else throw console.log('에러발생');
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 module.exports = field;

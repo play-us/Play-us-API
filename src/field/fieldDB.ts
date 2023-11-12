@@ -182,7 +182,7 @@ const deleteFieldLike = (fieldId:string, email:string)=>{
 }
 
 //구장 예약 정보 조회
-const getReservation = (resvId: string, fieldId: string, email: string, resvDate: Date, resvTime:string, resvState:string) => {
+const getReservation = (resvId: string, fieldId: string, email: string, resvDate: Date, resvStartTime:string, resvEndTime:string, resvState:string) => {
     let sql = "SELECT resv_id " + 
         ", field_id " + 
         ", email " +
@@ -199,7 +199,8 @@ const getReservation = (resvId: string, fieldId: string, email: string, resvDate
     if(fieldId) sql = sql + " and field_id = '" + fieldId + "' ";
     if(email) sql = sql + " and email = '" + email + "' ";
     if(resvDate) sql = sql + " and resv_date = '" + resvDate + "' ";
-    if(resvTime) sql = sql + " and resv_time = '" + resvTime + "' ";
+    if(resvStartTime) sql = sql + " and resv_start_time = '" + resvStartTime + "' ";
+    if(resvEndTime) sql = sql + " and resv_end_time = '" + resvEndTime + "' ";
     if(resvState) sql = sql + " and resv_state = '" + resvState + "' ";
     return sql;
 }
