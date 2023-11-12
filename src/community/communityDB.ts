@@ -8,6 +8,8 @@ const getCommunityList = (fieldTp:string, area:string, searchTxt:string, pageSta
         ', dead_line ' +
         ', member_cnt ' +
         ', field_tp ' +
+        ", (select count(1) from community_wish x where x.commu_id = a.commu_id) as wish_cnt " +
+        ", (select count(1) from community_comment x where x.commu_id = a.commu_id) as comment_cnt " +
         ', insert_datetime ' +
         ', update_datetime ' +
         'FROM community ' + 
