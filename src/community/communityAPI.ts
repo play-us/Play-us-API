@@ -119,7 +119,7 @@ community.get('/getCommunityDetail', async (req: express.Request, res: express.R
 *  paths:
 *   /community/insertCommunity:
 *     get:
-*       summary: 커뮤니티등록
+*       summary: 커뮤니티 등록
 *       tags: [COMMUNITY]
 *       parameters:
 *        - in: query
@@ -363,5 +363,132 @@ community.get('/getCommunityCommentList', async (req: express.Request, res: expr
       console.log(err);
     }
   });
+
+/**
+*  @swagger
+*  paths:
+*   /community/insertCommunityComment:
+*     get:
+*       summary: 커뮤니티댓글 등록
+*       tags: [COMMUNITY]
+*       parameters:
+*        - in: query
+*          name: commuId
+*          required: true
+*          description: 커뮤니티ID
+*          type: string
+*        - in: query
+*          name: commentTxt
+*          required: true
+*          description: 댓글 내용
+*          type: string
+*        - in: query
+*          name: email
+*          required: true
+*          description: 이메일
+*          type: string
+*       responses:
+*         "200":
+*           description: field.
+*           content:
+*             application/json:
+*/
+community.get('/insertCommunityComment', async (req: express.Request, res: express.Response) => {
+  try {
+    const param = JSON.parse(JSON.stringify(req.params));
+    const communityDB = require('../community/communityDB');
+    const commuId = param['commuId'];
+    const commentTxt = param['commentTxt'];
+    const email = param['email'];
+
+    let sql = communityDB.insertCommunityComment(commuId, commentTxt, email);
+    const rows = await db.query(sql)
+    const conn = await db.getConnection();
+    conn.release();
+    if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
+    else throw console.log('에러발생');
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/**
+*  @swagger
+*  paths:
+*   /community/updateCommunityComment:
+*     get:
+*       summary: 커뮤니티댓글 수정
+*       tags: [COMMUNITY]
+*       parameters:
+*        - in: query
+*          name: commentId
+*          required: true
+*          description: 커뮤니티 댓글ID
+*          type: string
+*        - in: query
+*          name: commentTxt
+*          required: true
+*          description: 댓글 내용
+*          type: string
+*       responses:
+*         "200":
+*           description: field.
+*           content:
+*             application/json:
+*/
+community.get('/updateCommunityComment', async (req: express.Request, res: express.Response) => {
+  try {
+    const param = JSON.parse(JSON.stringify(req.params));
+    const communityDB = require('../community/communityDB');
+    const commentId = param['commentId'];
+    const commentTxt = param['commentTxt'];
+
+    let sql = communityDB.updateCommunityComment(commentId, commentTxt);
+    const rows = await db.query(sql)
+    const conn = await db.getConnection();
+    conn.release();
+    if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
+    else throw console.log('에러발생');
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/**
+*  @swagger
+*  paths:
+*   /community/deleteCommunityComment:
+*     get:
+*       summary: 커뮤니티댓글 삭제
+*       tags: [COMMUNITY]
+*       parameters:
+*        - in: query
+*          name: commentId
+*          required: true
+*          description: 커뮤니티 댓글ID
+*          type: string
+*       responses:
+*         "200":
+*           description: field.
+*           content:
+*             application/json:
+*/
+community.get('/deleteCommunityComment', async (req: express.Request, res: express.Response) => {
+  try {
+    const param = JSON.parse(JSON.stringify(req.params));
+    const communityDB = require('../community/communityDB');
+    const commentId = param['commentId'];
+    const commentTxt = param['commentTxt'];
+
+    let sql = communityDB.deleteCommunityComment(commentId);
+    const rows = await db.query(sql)
+    const conn = await db.getConnection();
+    conn.release();
+    if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
+    else throw console.log('에러발생');
+  } catch (err) {
+    console.log(err);
+  }
+});
 
 module.exports = community;

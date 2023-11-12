@@ -113,4 +113,39 @@ const getCommunityCommentList = (commuId:string, email:string, pageStart:number,
     return sql;
 };
 
-module.exports = {getCommunityList, getCommunityDetail, insertCommunity, getCommunityCommentList};
+//커뮤니티댓글 등록
+const insertCommunityComment = (commuId:string, commentTxt:string, email:string) =>{
+    const sql = "INSERT INTO community_comment ( " +
+    "comment_id, " +
+    "commu_id, " +
+    "comment_seq, " +
+    "email, " +
+    "comment_txt, " +
+    "insert_datetime, " +
+    "update_datetime " +
+    "VALUES (" + 
+    "(select ifnull(max(comment_id) + 1, 1) from community_comment b), '" + 
+    commuId + "', " + 
+    "(select ifnull(max(comment_seq) + 1, 1) from community_comment b where b.commu_id = '" + commuId + "), '" + 
+    email + "', '" +
+    commentTxt + "', " +
+    "now(), now()) ";
+    return sql;
+}
+
+//커뮤니티댓글 수정
+const updateCommunityCommnet = (commentId:string, commentTxt:string) =>{
+    const sql = "UPDATE community_comment set " +
+    "comment_txt = '" + commentTxt + "'," +
+    "update_datetime = now() "  +
+    "WHERE comment_id = '" + commentId + "'";
+    return sql;
+}
+
+//커뮤니티댓글 삭제
+const deleteCommunitycomment = (commentId:string)=> {
+    const sql = "DELETE FROM community_comment where comment_id = '" + commentId + "'";
+    return sql;
+}
+
+module.exports = {getCommunityList, getCommunityDetail, insertCommunity, getCommunityCommentList, insertCommunityComment, updateCommunityCommnet, deleteCommunitycomment};
