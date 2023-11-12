@@ -8,7 +8,8 @@ const bodyParser = require("body-parser");
 //app.use(cors()); //모든 접근 허용
 app.use(cors({ origin: 'http://localhost:3000'})); //local
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 //swagger
 const swaggerUi = require('swagger-ui-express');

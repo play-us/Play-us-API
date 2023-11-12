@@ -176,7 +176,7 @@ community.get('/getCommunityDetail', async (req: express.Request, res: express.R
 */
 community.post('/insertCommunity', async (req: express.Request, res: express.Response) => {
   try {
-    const param = JSON.parse(JSON.stringify(req.query));
+    const param = JSON.parse(JSON.stringify(req.body));
     const communityDB = require('../community/communityDB');
     const commuTitle = param['commuTitle'];
     const commuTxt = param['commuTxt'];
