@@ -102,51 +102,52 @@ const insertField = (fieldId:string, fieldNm:string, fieldTp:string, area:string
         "remark_txt, " +
         "insert_datetime, " +
         "update_datetime) " +
-        " VALUES (" +
-        fieldId + ", " +
-        fieldNm + ", " +
-        fieldTp + ", " +
-        area + ", " +
-        addr + ", " +
-        lat + ", " +
-        lng + ", " +
-        openingHours + ", " +
-        closingHours + ", " +
-        price + ", " +
-        hours + ", " +
-        note + ", " +
-        size + ", " +
-        swrmYn + ", " +
-        parkingTp + ", " +
-        rentalSup + ", " +
-        "1, " +
+        " VALUES ('" +
+        fieldId + "' , '" +
+        fieldNm + "' , '" +
+        fieldTp + "', '" +
+        area + "', '" +
+        addr + "', '" +
+        lat + "', '" +
+        lng + "', '" +
+        openingHours + "', '" +
+        closingHours + "', '" +
+        price + "', '" +
+        hours + "', '" +
+        note + "', '" +
+        size + "', '" +
+        swrmYn + "', '" +
+        parkingTp + "', '" +
+        rentalSup + "', " +
+        "'1', " +
         "NULL, now(), now())";
     return sql;
 }
 
 //구장좋아요 조회
-const getFieldLike = (fieldId:string)=>{
+const getFieldLike = (fieldId:string, email:string)=>{
     let sql = "select a.like_id "+
         ", a.field_id "+
         ", a.email " +
         "from field_like a " +
         "where 1=1 ";
-    if(fieldId) sql = sql + ' and field_id = ' + fieldId;
+    if(fieldId) sql = sql + " and field_id = '" + fieldId + "' ";
+    if(email) sql = sql + " and email = '" + email + "' ";
     return sql;
 };
 
 //구장좋아요 insert
 const insertFieldLike = (fieldId:string, email:string)=> {
     const sql = "insert into field_like ( like_id, field_id, email, insert_datetime, update_datetime  )" + 
-        "values ( (select ifnull(max(like_id) + 1, 1) from field_like b),  " + fieldId + ", " + email + ", now(), now())";
+        "values ( (select ifnull(max(like_id) + 1, 1) from field_like b),  '" + fieldId + "', '" + email + "', now(), now())";
     return sql;
 }
 
 //구장좋아요 delete
 const deleteFieldLike = (fieldId:string, email:string)=>{
     const sql = "delete from field_like" +
-        "where field_id = " + fieldId +
-        " and email = " + email;
+        "where field_id = '" + fieldId + "' " + 
+        " and email = '" + email + "'";
     return sql;
 }
 
@@ -164,12 +165,12 @@ const getReservation = (resvId: string, fieldId: string, email: string, resvDate
         ", update_datetime " +
         " from reservation " +
         " where 1=1 ";
-    if(resvId) sql = sql + ' and resv_id = ' + resvId;
-    if(fieldId) sql = sql + ' and field_id = ' + fieldId;
-    if(email) sql = sql + ' and email = ' + email;
-    if(resvDate) sql = sql + ' and resv_date = ' + resvDate;
-    if(resvTime) sql = sql + ' and resv_time = ' + resvTime;
-    if(resvState) sql = sql + ' and resv_state = ' + resvState;
+    if(resvId) sql = sql + " and resv_id = '" + resvId + "' ";
+    if(fieldId) sql = sql + " and field_id = '" + fieldId + "' ";
+    if(email) sql = sql + " and email = '" + email + "' ";
+    if(resvDate) sql = sql + " and resv_date = '" + resvDate + "' ";
+    if(resvTime) sql = sql + " and resv_time = '" + resvTime + "' ";
+    if(resvState) sql = sql + " and resv_state = '" + resvState + "' ";
     return sql;
 }
 
@@ -178,14 +179,14 @@ const insertReservation  = (fieldId:string, email:string, resvDate: Date, resvTi
     const sql = "INSERT INTO reservation " + 
         "(resv_id, field_id, email, resv_date, resv_time, resv_state, resv_price, remark_txt, insert_datetime, update_datetime) " +
         " VALUES " +
-        "((SELECT IFNULL(MAX(resv_id) + 1, 1) FROM reservation b), " +
-        fieldId + ", " +  
-        email + ", " + 
-        resvDate + ", " + 
-        resvTime + ", " +
-        resvState + ", " +
-        resvPrice + ", " +
-        remarkTxt + " , " +
+        "((SELECT IFNULL(MAX(resv_id) + 1, 1) FROM reservation b), '" +
+        fieldId + "', '" +  
+        email + "', '" + 
+        resvDate + "', '" + 
+        resvTime + "', '" +
+        resvState + "', '" +
+        resvPrice + "', '" +
+        remarkTxt + "', " +
         "now(), now())";
     return sql;
 }

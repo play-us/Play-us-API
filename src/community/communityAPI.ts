@@ -114,6 +114,84 @@ community.get('/getCommunityDetail', async (req: express.Request, res: express.R
     }
   });
 
+
+  /**
+*  @swagger
+*  paths:
+*   /community/insertCommunity:
+*     get:
+*       summary: 커뮤니티등록
+*       tags: [COMMUNITY]
+*       parameters:
+*        - in: query
+*          name: commuTitle
+*          required: true
+*          description: 커뮤니티 제목
+*          type: string
+*        - in: query
+*          name: commuTxt
+*          required: true
+*          description: 커뮤니티 내용
+*          type: string
+*        - in: query
+*          name: area
+*          required: true
+*          description: 지역(SYS006)
+*          type: string
+*        - in: query
+*          name: email
+*          required: false
+*          description: 이메일
+*          type: string
+*        - in: query
+*          name: deadLine
+*          required: false
+*          description: 마감일자
+*          type: Date
+*        - in: query
+*          name: deadLine
+*          required: false
+*          description: 마감일자
+*          type: Date
+*        - in: query
+*          name: memberCnt
+*          required: false
+*          description: 모집인원
+*          type: number
+*        - in: query
+*          name: fieldTp
+*          required: false
+*          description: 구장구분(SYS002)
+*          type: string
+*       responses:
+*         "200":
+*           description: field.
+*           content:
+*             application/json:
+*/
+community.get('/insertCommunity', async (req: express.Request, res: express.Response) => {
+  try {
+    const param = JSON.parse(JSON.stringify(req.params));
+    const communityDB = require('../community/communityDB');
+    const commuTitle = param['commuTitle'];
+    const commuTxt = param['commuTxt'];
+    const email = param['email'];
+    const area = param['area'];
+    const deadLine = param['deadLine']; 
+    const memberCnt = param['memberCnt']; 
+    const fieldTp = param['fieldTp']; 
+
+    let sql = communityDB.insertCommunity(commuTitle, commuTxt, email, area, deadLine, memberCnt, fieldTp);
+    const rows = await db.query(sql)
+    const conn = await db.getConnection();
+    conn.release();
+    if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
+    else throw console.log('에러발생');
+  } catch (err) {
+    console.log(err);
+  }
+});
+
   /**
 *  @swagger
 *  paths:
