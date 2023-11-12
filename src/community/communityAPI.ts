@@ -118,7 +118,7 @@ community.get('/getCommunityDetail', async (req: express.Request, res: express.R
 *  @swagger
 *  paths:
 *   /community/insertCommunity:
-*     get:
+*     post:
 *       summary: 커뮤니티 등록
 *       tags: [COMMUNITY]
 *       parameters:
@@ -195,7 +195,7 @@ community.post('/insertCommunity', async (req: express.Request, res: express.Res
 *  @swagger
 *  paths:
 *   /community/updateCommunity:
-*     get:
+*     post:
 *       summary: 커뮤니티 수정
 *       tags: [COMMUNITY]
 *       parameters:
@@ -278,7 +278,7 @@ community.post('/updateCommunity', async (req: express.Request, res: express.Res
 *  @swagger
 *  paths:
 *   /community/deleteCommunity:
-*     get:
+*     delete:
 *       summary: 커뮤니티 삭제
 *       tags: [COMMUNITY]
 *       parameters:
@@ -368,7 +368,7 @@ community.get('/getCommunityCommentList', async (req: express.Request, res: expr
 *  @swagger
 *  paths:
 *   /community/insertCommunityComment:
-*     get:
+*     post:
 *       summary: 커뮤니티댓글 등록
 *       tags: [COMMUNITY]
 *       parameters:
@@ -416,7 +416,7 @@ community.post('/insertCommunityComment', async (req: express.Request, res: expr
 *  @swagger
 *  paths:
 *   /community/updateCommunityComment:
-*     get:
+*     post:
 *       summary: 커뮤니티댓글 수정
 *       tags: [COMMUNITY]
 *       parameters:
@@ -458,7 +458,7 @@ community.post('/updateCommunityComment', async (req: express.Request, res: expr
 *  @swagger
 *  paths:
 *   /community/deleteCommunityComment:
-*     get:
+*     delete:
 *       summary: 커뮤니티댓글 삭제
 *       tags: [COMMUNITY]
 *       parameters:

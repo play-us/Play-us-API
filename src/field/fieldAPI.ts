@@ -125,7 +125,7 @@ field.get('/getFieldDetail', async (req: express.Request, res: express.Response)
 *  @swagger
 *  paths:
 *   /field/insertField:
-*     get:
+*     post:
 *       summary: 구장 등록
 *       tags: [FIELD]
 *       parameters:
@@ -245,7 +245,7 @@ field.post('/insertField', async (req: express.Request, res: express.Response) =
 *  @swagger
 *  paths:
 *   /field/updateField:
-*     get:
+*     post:
 *       summary: 구장 수정
 *       tags: [FIELD]
 *       parameters:
@@ -371,7 +371,7 @@ field.post('/updateField', async (req: express.Request, res: express.Response) =
 *  @swagger
 *  paths:
 *   /field/deleteField:
-*     get:
+*     delete:
 *       summary: 구장 삭제
 *       tags: [FIELD]
 *       parameters:
@@ -403,7 +403,7 @@ field.delete('/deleteField', async (req: express.Request, res: express.Response)
   }
 });
 
-  /**
+/**
 *  @swagger
 *  paths:
 *   /field/getFieldLike:
@@ -430,6 +430,58 @@ field.get('/getFieldLike', async (req: express.Request, res: express.Response) =
     const email = param['email'] || null;
 
     let sql = fieldDB.getFieldLike(fieldId, email);
+    const rows = await db.query(sql)
+    const conn = await db.getConnection();
+    conn.release();
+    if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
+    else throw console.log('에러발생');
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/**
+*  @swagger
+*  paths:
+*   /field/fieldLike:
+*     post:
+*       summary: 구장좋아요 
+*       tags: [FIELD]
+*       parameters:
+*        - in: query
+*          name: fieldId
+*          required: true
+*          description: 구장ID
+*          type: string
+*        - in: query
+*          name: email
+*          required: true
+*          description: 이메일
+*          type: string
+*        - in: query
+*          name: state
+*          required: true
+*          description: 좋아요상태 (1 좋아요, 0 좋아요취소)
+*          type: string
+*       responses:
+*         "200":
+*           description: field like.
+*           content:
+*             application/json:
+*/
+field.post('/fieldLike', async (req: express.Request, res: express.Response) => {
+  try {
+    const param = JSON.parse(JSON.stringify(req.query));
+    const fieldDB = require('../field/fieldDB');
+    const fieldId = param['fieldId'];
+    const email = param['email'];
+    const state = param['state'];
+    let sql;
+    if(state === '1') {
+      sql = fieldDB.insertFieldLike(fieldId, email);
+    } else {
+      sql = fieldDB.deleteFieldLike(fieldId, email);
+    }
     const rows = await db.query(sql)
     const conn = await db.getConnection();
     conn.release();
@@ -516,7 +568,7 @@ field.get('/getReservation', async (req: express.Request, res: express.Response)
 *  @swagger
 *  paths:
 *   /field/deleteReservation:
-*     get:
+*     delete:
 *       summary: 구장 예약 삭제
 *       tags: [FIELD]
 *       parameters:
