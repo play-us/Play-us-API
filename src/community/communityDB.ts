@@ -123,7 +123,7 @@ const insertCommunityComment = (commuId:string, commentTxt:string, email:string)
     "email, " +
     "comment_txt, " +
     "insert_datetime, " +
-    "update_datetime " +
+    "update_datetime ) " +
     "VALUES (" + 
     "(select ifnull(max(b.comment_id) + 1, 1) from community_comment b), '" + 
     commuId + "', " + 
