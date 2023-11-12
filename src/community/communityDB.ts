@@ -1,5 +1,5 @@
 // 커뮤니티 리스트 조회
-const getCommunityList = (fieldTp:string, area:string, searchTxt:string, pageStart:number, pageEnd: number)=>{
+const getCommunityList = (fieldTp:string, area:string, searchTxt:string, pageStart:number, pageEnd: number, email:string)=>{
     let sql = 'SELECT commu_id' +
         ', commu_title ' +
         ', commu_txt ' +
@@ -15,6 +15,7 @@ const getCommunityList = (fieldTp:string, area:string, searchTxt:string, pageSta
     if(fieldTp) sql = sql + " and field_tp = '" + fieldTp + "'";
     if(area) sql = sql + " and area = '" + area + "'";
     if(searchTxt) sql = sql + " and commu_title like '%" + searchTxt + "%'";
+    if(email) sql = sql + " and email '" + email + "'";
     sql =  sql + ' order by insert_datetime desc'
     if(pageStart && pageEnd){
         sql = sql + 'limit ' + pageStart + ', ' + pageEnd;

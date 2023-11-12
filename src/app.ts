@@ -2,10 +2,13 @@ import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 
 const app:express.Application = express();
+const bodyParser = require("body-parser");
 
 //cors
 //app.use(cors()); //모든 접근 허용
 app.use(cors({ origin: 'http://localhost:3000'})); //local
+
+app.use(bodyParser.urlencoded({extended: true}));
 
 //swagger
 const swaggerUi = require('swagger-ui-express');

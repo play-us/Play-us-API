@@ -45,6 +45,11 @@ const community = express();
 *          required: false
 *          description: 페이지끝
 *          type: number
+*        - in: query
+*          name: email
+*          required: false
+*          description: 이메일
+*          type: string
 *       responses:
 *         "200":
 *           description: community list.
@@ -60,8 +65,9 @@ community.get('/getCommunityList', async (req: express.Request, res: express.Res
       const searchTxt = param['searchTxt'];
       const pageStart = param['pageStart'];
       const pageEnd = param['pageEnd'];
+      const email = param['email'];
   
-      let sql = communityDB.getCommunityList(fieldTp, area, searchTxt, pageStart, pageEnd);
+      let sql = communityDB.getCommunityList(fieldTp, area, searchTxt, pageStart, pageEnd, email);
       const rows = await db.query(sql);
       const conn = await db.getConnection();
       conn.release();
