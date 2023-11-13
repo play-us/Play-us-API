@@ -12,7 +12,7 @@ const getCommunityList = (fieldTp:string, area:string, searchTxt:string, pageSta
         ", (select count(1) from community_comment x where x.commu_id = a.commu_id) as comment_cnt " +
         ', insert_datetime ' +
         ', update_datetime ' +
-        'FROM community ' + 
+        'FROM community a' + 
         ' WHERE 1=1'; 
     if(fieldTp) sql = sql + " and field_tp = '" + fieldTp + "'";
     if(area) sql = sql + " and area = '" + area + "'";
@@ -100,6 +100,7 @@ const getCommunityCommentList = (commuId:string, email:string, pageStart:number,
         ', a.commu_id ' +
         ', a.comment_seq ' +
         ', a.email ' +
+        ', (select x.name from member x where x.email = a.email) as name'
         ', a.comment_txt ' +
         ', a.insert_datetime ' +
         ', a.update_datetime ' +
