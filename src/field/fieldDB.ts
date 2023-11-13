@@ -28,6 +28,7 @@ const getFieldList = (fieldId:string, fieldTp:string, area:string, searchTxt:str
         ", b.img_url " +
         ", b.img_sort " +
         ", (select count(1) from field_like x where x.field_id = a.field_id) as like_cnt " +
+        ", (select count(1) from field_review x where x.field_id = a.field_id) as review_cnt " +
         ", (select count(1) from reservation x where x.field_id = a.field_id) as resv_cnt " +
         "from field a " +
         "left outer join field_image b on b.field_id = a.field_id and b.img_sort = 1 " +
