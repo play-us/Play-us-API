@@ -477,7 +477,7 @@ field.post('/fieldLike', async (req: express.Request, res: express.Response) => 
     const email = param['email'];
     const state = param['state'];
     let sql;
-    if(state === '1') {
+    if(state) {
       sql = fieldDB.insertFieldLike(fieldId, email);
     } else {
       sql = fieldDB.deleteFieldLike(fieldId, email);

@@ -432,7 +432,7 @@ community.get('/getCommunityCommentList', async (req: express.Request, res: expr
 *           content:
 *             application/json:
 */
-community.post('/insertCommunityComment', async (req: express.Request, res: express.Response) => {
+community.get('/insertCommunityComment', async (req: express.Request, res: express.Response) => {
   try {
     const param = JSON.parse(JSON.stringify(req.body));
     const communityDB = require('../community/communityDB');
@@ -440,8 +440,8 @@ community.post('/insertCommunityComment', async (req: express.Request, res: expr
     const commentTxt = param['commentTxt'];
     const email = param['email'] || 'chu';
 
-    let sql = communityDB.insertCommunityComment(commuId, commentTxt, email);
-    const rows = await db.query(sql)
+    let sql = communityDB.insertCommunityComment('2', 'api test9', 'chu');
+    const rows = await db.query(sql);
     const conn = await db.getConnection();
     conn.release();
     if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });

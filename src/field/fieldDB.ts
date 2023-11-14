@@ -104,7 +104,7 @@ const insertField = (fieldNm:string, fieldTp:string, area:string, addr:string, l
         "insert_datetime, " +
         "update_datetime) " +
         " VALUES ('" +
-        "(SELECT IFNULL(MAX(field_id) + 1, 1) FROM field b), '" +
+        "(SELECT IFNULL(MAX(CAST(b.field_id AS unsigned)) + 1, 1) FROM field b), '" +
         fieldNm + "' , '" +
         fieldTp + "', '" +
         area + "', '" +
@@ -121,7 +121,7 @@ const insertField = (fieldNm:string, fieldTp:string, area:string, addr:string, l
         parkingTp + "', '" +
         rentalSup + "', " +
         "'1', " +
-        "NULL, now(), now())";
+        "NULL, DATE_ADD(NOW(), INTERVAL 9 HOUR), DATE_ADD(NOW(), INTERVAL 9 HOUR))";
     return sql;
 }
 
@@ -143,7 +143,7 @@ const updateField = (fieldId:string, fieldNm:string, fieldTp:string, area:string
     "swrm_yn = '" + swrmYn + "', " +
     "parking_tp = '" + parkingTp + "', " +
     "rental_sup = '" + rentalSup + "', " +
-    "update_datetime = now() " +
+    "update_datetime = DATE_ADD(NOW(), INTERVAL 9 HOUR) " +
     "WHERE field_id = '" + fieldId + "'";
     return sql;
 }
@@ -170,14 +170,14 @@ const getFieldLike = (fieldId:string, email:string)=>{
 //구장좋아요 insert
 const insertFieldLike = (fieldId:string, email:string)=> {
     const sql = "insert into field_like ( like_id, field_id, email, insert_datetime, update_datetime  )" + 
-        "values ( (select ifnull(max(like_id) + 1, 1) from field_like b),  '" + fieldId + "', '" + email + "', now(), now())";
+        "values ( (select ifnull(max(CAST(b.like_id AS unsigned)) + 1, 1) from field_like b),  '" + fieldId + "', '" + email + "', DATE_ADD(NOW(), INTERVAL 9 HOUR), DATE_ADD(NOW(), INTERVAL 9 HOUR))";
     return sql;
 }
 
 //구장좋아요 delete
 const deleteFieldLike = (fieldId:string, email:string)=>{
     const sql = "delete from field_like" +
-        "where field_id = '" + fieldId + "' " + 
+        " where field_id = '" + fieldId + "' " + 
         " and email = '" + email + "'";
     return sql;
 }
@@ -211,7 +211,7 @@ const insertReservation  = (fieldId:string, email:string, resvDate: Date, resvTi
     const sql = "INSERT INTO reservation " + 
         "(resv_id, field_id, email, resv_date, resv_time, resv_state, resv_price, remark_txt, insert_datetime, update_datetime) " +
         " VALUES " +
-        "((SELECT IFNULL(MAX(resv_id) + 1, 1) FROM reservation b), '" +
+        "((SELECT IFNULL(MAX(CAST(b.resv_id AS unsigned)) + 1, 1) FROM reservation b), '" +
         fieldId + "', '" +  
         email + "', '" + 
         resvDate + "', '" + 
@@ -219,7 +219,7 @@ const insertReservation  = (fieldId:string, email:string, resvDate: Date, resvTi
         resvState + "', '" +
         resvPrice + "', '" +
         remarkTxt + "', " +
-        "now(), now())";
+        "DATE_ADD(NOW(), INTERVAL 9 HOUR), DATE_ADD(NOW(), INTERVAL 9 HOUR))";
     return sql;
 }
 

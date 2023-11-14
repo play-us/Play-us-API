@@ -61,7 +61,7 @@ const insertCommunity = (commuTitle:string, commuTxt:string, email:string, area:
     "insert_datetime" + ", " +
     "update_datetime" + ") " +
     "VALUES ( " +
-    "(select ifnull(max(commu_id) + 1, 1) from community b), '" + 
+    "(select ifnull(max(CAST(b.commu_id AS unsigned)) + 1, 1) from community b), '" + 
     commuTitle + "', '" +
     commuTxt + "', '" +
     email + "', '" +
@@ -69,7 +69,7 @@ const insertCommunity = (commuTitle:string, commuTxt:string, email:string, area:
     deadLine + "', '" +
     memberCnt + "', '" +
     fieldTp + "', " +
-    "NOW(), NOW() )";
+    "DATE_ADD(NOW(), INTERVAL 9 HOUR), DATE_ADD(NOW(), INTERVAL 9 HOUR) )";
     return sql;
 }
 
@@ -83,7 +83,7 @@ const updateCommunity = (commuId:string, commuTitle:string, commuTxt:string, ema
     "dead_line = '" + deadLine + "', " +
     "member_cnt = " + memberCnt + ", " +
     "field_tp = '" + fieldTp + "', " +
-    "update_datetime = now() " +
+    "update_datetime = DATE_ADD(NOW(), INTERVAL 9 HOUR) " +
     "WHERE commu_id = '" + commuId + "'";
     return sql;
 }
@@ -126,20 +126,20 @@ const insertCommunityComment = (commuId:string, commentTxt:string, email:string)
     "insert_datetime, " +
     "update_datetime ) " +
     "VALUES (" + 
-    "(select ifnull(max(b.comment_id) + 1, 1) from community_comment b), '" + 
+    "(select ifnull(max(CAST(b.comment_id AS unsigned)) + 1, 1) from community_comment b), '" + 
     commuId + "', " + 
-    "(select ifnull(max(c.comment_seq) + 1, 1) from community_comment c where c.commu_id = '" + commuId + "'), '" + 
+    "(select ifnull(max(CAST(c.comment_seq AS unsigned)) + 1, 1) from community_comment c where c.commu_id = '" + commuId + "'), '" + 
     email + "', '" +
     commentTxt + "', " +
-    "now(), now()) ";
+    "DATE_ADD(NOW(), INTERVAL 9 HOUR), DATE_ADD(NOW(), INTERVAL 9 HOUR)) ";
     return sql;
 }
 
 //커뮤니티댓글 수정
-const updateCommunityCommnet = (commentId:string, commentTxt:string) =>{
+const updateCommunityComment = (commentId:string, commentTxt:string) =>{
     const sql = "UPDATE community_comment set " +
     "comment_txt = '" + commentTxt + "'," +
-    "update_datetime = now() "  +
+    "update_datetime = DATE_ADD(NOW(), INTERVAL 9 HOUR) "  +
     "WHERE comment_id = '" + commentId + "'";
     return sql;
 }
@@ -158,7 +158,7 @@ const deleteCommunityCommentAll = (commuId:string)=> {
 //커뮤니티좋아요 insert
 const insertCommunityWish = (commuId:string, email:string)=> {
     const sql = "insert into community_wish ( wish_id, commu_id, email, insert_datetime, update_datetime  )" + 
-        "values ( (select ifnull(max(wish_id) + 1, 1) from community_wish b),  '" + commuId + "', '" + email + "', now(), now())";
+        "values ( (select ifnull(max(CAST(b.wish_id AS unsigned)) + 1, 1) from community_wish b),  '" + commuId + "', '" + email + "', DATE_ADD(NOW(), INTERVAL 9 HOUR), DATE_ADD(NOW(), INTERVAL 9 HOUR))";
     return sql;
 }
 
@@ -175,4 +175,4 @@ const deleteCommunityWishAll = (commuId:string)=> {
     const sql = "DELETE FROM community_wish where commu_id = '" + commuId + "'";
     return sql;
 }
-module.exports = {getCommunityList, getCommunityDetail, insertCommunity, updateCommunity, deleteCommunity, getCommunityCommentList, insertCommunityComment, updateCommunityCommnet, deleteCommunityComment, deleteCommunityCommentAll, insertCommunityWish, deleteCommunityWish, deleteCommunityWishAll};
+module.exports = {getCommunityList, getCommunityDetail, insertCommunity, updateCommunity, deleteCommunity, getCommunityCommentList, insertCommunityComment, updateCommunityComment, deleteCommunityComment, deleteCommunityCommentAll, insertCommunityWish, deleteCommunityWish, deleteCommunityWishAll};
