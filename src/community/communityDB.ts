@@ -9,6 +9,7 @@ const getCommunityList = (fieldTp:string, area:string, searchTxt:string, pageSta
         ', member_cnt ' +
         ', field_tp ' +
         ", (select count(1) from community_wish x where x.commu_id = a.commu_id) as wish_cnt " +
+        ", (case when (select distinct email from community_wish x where x.commu_id = a.commu_id and x.email = '" + email + "'  ) is not null then '1' else '0' end ) as wish_yn " + 
         ", (select count(1) from community_comment x where x.commu_id = a.commu_id) as comment_cnt " +
         ', insert_datetime ' +
         ', update_datetime ' +
@@ -17,7 +18,7 @@ const getCommunityList = (fieldTp:string, area:string, searchTxt:string, pageSta
     if(fieldTp) sql = sql + " and field_tp = '" + fieldTp + "'";
     if(area) sql = sql + " and area = '" + area + "'";
     if(searchTxt) sql = sql + " and commu_title like '%" + searchTxt + "%'";
-    if(email) sql = sql + " and email '" + email + "'";
+    //if(email) sql = sql + " and email '" + email + "'";
     sql =  sql + ' order by insert_datetime desc'
     if(pageStart && pageEnd){
         sql = sql + ' limit ' + pageStart + ', ' + pageEnd;

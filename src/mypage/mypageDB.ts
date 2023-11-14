@@ -1,6 +1,6 @@
 const getLikeList = (email:string, pageStart:number, pageEnd: number) =>{
     let sql = "SELECT DISTINCT a.field_id " +
-        ",a.field_nm " +
+        ", a.field_nm " +
         ", (select syscd_nm from sys_code x where x.class_cd = 'SYS002' and x.syscd_cd = a.field_tp) as field_tp " +
         ", (select syscd_nm from sys_code x where x.class_cd = 'SYS006' and x.syscd_cd = a.area) as area " +
         ",a.addr " +

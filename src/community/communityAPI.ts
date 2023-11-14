@@ -560,7 +560,7 @@ community.delete('/deleteCommunityComment', async (req: express.Request, res: ex
 */
 community.post('/communityWish', async (req: express.Request, res: express.Response) => {
   try {
-    const param = JSON.parse(JSON.stringify(req.query));
+    const param = JSON.parse(JSON.stringify(req.body));
     const communityDB = require('../community/communityDB');
     const commuId = param['commuId'];
     const email = param['email'];
