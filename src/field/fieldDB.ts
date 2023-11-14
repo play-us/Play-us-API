@@ -40,7 +40,7 @@ const getFieldList = (fieldId:string, fieldTp:string, area:string, searchTxt:str
     if(sort && sort === '1') {
         sql = sql + ' order by resv_cnt desc, insert_datetime desc, field_nm';
     } else {
-        sql = sql + ' order by insert_datetime desc, field_nm';
+        sql = sql + ' order by insert_datetime desc, field_nm ';
     }
     if(pageStart && pageEnd){
         sql = sql + 'limit ' + pageStart + ', ' + pageEnd;
