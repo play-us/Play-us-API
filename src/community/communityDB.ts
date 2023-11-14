@@ -145,7 +145,7 @@ const updateCommunityCommnet = (commentId:string, commentTxt:string) =>{
 }
 
 //커뮤니티댓글 삭제
-const deleteCommunitycomment = (commentId:string)=> {
+const deleteCommunityComment = (commentId:string)=> {
     const sql = "DELETE FROM community_comment where comment_id = '" + commentId + "'";
     return sql;
 }
@@ -175,4 +175,4 @@ const deleteCommunityWishAll = (commuId:string)=> {
     const sql = "DELETE FROM community_wish where commu_id = '" + commuId + "'";
     return sql;
 }
-module.exports = {getCommunityList, getCommunityDetail, insertCommunity, updateCommunity, deleteCommunity, getCommunityCommentList, insertCommunityComment, updateCommunityCommnet, deleteCommunitycomment, deleteCommunityCommentAll, insertCommunityWish, deleteCommunityWish, deleteCommunityWishAll};
+module.exports = {getCommunityList, getCommunityDetail, insertCommunity, updateCommunity, deleteCommunity, getCommunityCommentList, insertCommunityComment, updateCommunityCommnet, deleteCommunityComment, deleteCommunityCommentAll, insertCommunityWish, deleteCommunityWish, deleteCommunityWishAll};
