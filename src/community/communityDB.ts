@@ -9,7 +9,7 @@ const getCommunityList = (fieldTp:string, area:string, searchTxt:string, pageSta
         ', member_cnt ' +
         ', field_tp ' +
         ", (select count(1) from community_wish x where x.commu_id = a.commu_id) as wish_cnt " +
-        ", (case when (select distinct email from community_wish x where x.commu_id = a.commu_id and x.email = '" + email + "'  ) is not null then '1' else '0' end ) as wish_yn " + 
+        ", (case when (select distinct email from community_wish x where x.commu_id = a.commu_id and x.email = '" + email + "' ) is not null then '1' else '0' end ) as wish_yn " + 
         ", (select count(1) from community_comment x where x.commu_id = a.commu_id) as comment_cnt " +
         ', insert_datetime ' +
         ', update_datetime ' +
