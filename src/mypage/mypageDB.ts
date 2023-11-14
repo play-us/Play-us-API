@@ -22,7 +22,7 @@ const getLikeList = (email:string, pageStart:number, pageEnd: number) =>{
         "inner join field_like b on b.field_id =  a.field_id and b.email = '" + email + "'";
         sql = sql + "order by a.insert_datetime desc, a.field_id desc ";
         if(pageStart && pageEnd){
-            sql = sql + 'limit ' + pageStart + ', ' + pageEnd;
+            sql = sql + ' limit ' + pageStart + ', ' + pageEnd;
         }
     return sql;
 };

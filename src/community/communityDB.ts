@@ -20,7 +20,7 @@ const getCommunityList = (fieldTp:string, area:string, searchTxt:string, pageSta
     if(email) sql = sql + " and email '" + email + "'";
     sql =  sql + ' order by insert_datetime desc'
     if(pageStart && pageEnd){
-        sql = sql + 'limit ' + pageStart + ', ' + pageEnd;
+        sql = sql + ' limit ' + pageStart + ', ' + pageEnd;
     }
     return sql;
 };
@@ -110,7 +110,7 @@ const getCommunityCommentList = (commuId:string, email:string, pageStart:number,
     if(email) sql = sql + " and a.email = '" + email  + "'";
     sql = sql + " order by a.insert_datetime desc, comment_id desc ";
     if(pageStart && pageEnd){
-        sql = sql + 'limit ' + pageStart + ', ' + pageEnd;
+        sql = sql + ' limit ' + pageStart + ', ' + pageEnd;
     }
     return sql;
 };

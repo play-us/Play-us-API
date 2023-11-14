@@ -43,7 +43,7 @@ const getFieldList = (fieldId:string, fieldTp:string, area:string, searchTxt:str
         sql = sql + ' order by insert_datetime desc, field_nm ';
     }
     if(pageStart && pageEnd){
-        sql = sql + 'limit ' + pageStart + ', ' + pageEnd;
+        sql = sql + ' limit ' + pageStart + ', ' + pageEnd;
     }
     
     return sql;
