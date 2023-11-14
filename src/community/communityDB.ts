@@ -100,15 +100,15 @@ const getCommunityCommentList = (commuId:string, email:string, pageStart:number,
         ', a.commu_id ' +
         ', a.comment_seq ' +
         ', a.email ' +
-        ', (select x.name from member x where x.email = a.email) as name'
+        ', (select x.name from member x where x.email = a.email) as name' +
         ', a.comment_txt ' +
         ', a.insert_datetime ' +
         ', a.update_datetime ' +
         "from community_comment a " +
         "where 1=1 ";
     if(commuId) sql = sql + " and a.commu_id = '" + commuId  + "'";
-    if(email) sql = sql + " and a.email = '" + commuId  + "'";
-    sql = sql + "order by a.insert_datetime desc, comment_id desc ";
+    if(email) sql = sql + " and a.email = '" + email  + "'";
+    sql = sql + " order by a.insert_datetime desc, comment_id desc ";
     if(pageStart && pageEnd){
         sql = sql + 'limit ' + pageStart + ', ' + pageEnd;
     }
