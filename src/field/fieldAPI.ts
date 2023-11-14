@@ -461,8 +461,8 @@ field.get('/getFieldLike', async (req: express.Request, res: express.Response) =
 *        - in: query
 *          name: state
 *          required: true
-*          description: 좋아요상태 (1 좋아요, 0 좋아요취소)
-*          type: string
+*          description: 좋아요상태 (true 좋아요, false 좋아요취소)
+*          type: boolean
 *       responses:
 *         "200":
 *           description: field like.
@@ -506,12 +506,12 @@ field.post('/fieldLike', async (req: express.Request, res: express.Response) => 
 *          description: 구장ID
 *          type: string
 *        - in: query
-*          name: resvId
+*          name: email
 *          required: false
 *          description: 이메일
 *          type: string
 *        - in: query
-*          name: email
+*          name: resvId
 *          required: false
 *          description: 예약ID
 *          type: string
@@ -567,13 +567,79 @@ field.get('/getReservation', async (req: express.Request, res: express.Response)
 /**
 *  @swagger
 *  paths:
+*   /field/insertReservation:
+*     post:
+*       summary: 구장 예약 등록
+*       tags: [FIELD]
+*       parameters:
+*        - in: query
+*          name: fieldId
+*          required: false
+*          description: 구장ID
+*          type: string
+*        - in: query
+*          name: email
+*          required: false
+*          description: 이메일
+*          type: string
+*        - in: query
+*          name: resvDate
+*          required: false
+*          description: 예약일자
+*          type: Date
+*        - in: query
+*          name: resvStartTime
+*          required: false
+*          description: 예약시작시간(HH:MM:SS)
+*          type: string
+*        - in: query
+*          name: resvEndTime
+*          required: false
+*          description: 예약종료시간(HH:MM:SS)
+*          type: string
+*        - in: query
+*          name: resvPrice
+*          required: false
+*          description: 예약금액
+*          type: number
+*       responses:
+*         "200":
+*           description: field like.
+*           content:
+*             application/json:
+*/
+field.post('/insertReservation', async (req: express.Request, res: express.Response) => {
+  try {
+    const param = JSON.parse(JSON.stringify(req.body));
+    const fieldDB = require('../field/fieldDB');
+    const fieldId = param['fieldId'];
+    const email = param['email'];
+    const resvDate = param['resvDate'];
+    const resvStartTime = param['resvStartTime'];
+    const resvEndTime = param['resvEndTime'];
+    const resvPrice = param['resvPrice'];
+
+    let sql = fieldDB.insertReservation(fieldId, email, resvDate, resvStartTime, resvEndTime, resvPrice);
+    const rows = await db.query(sql)
+    const conn = await db.getConnection();
+    conn.release();
+    if (rows) return res.status(200).json({ result: camelsKeys(rows[0])});
+    else throw console.log('에러발생');
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/**
+*  @swagger
+*  paths:
 *   /field/deleteReservation:
 *     delete:
 *       summary: 구장 예약 삭제
 *       tags: [FIELD]
 *       parameters:
 *        - in: query
-*          name: email
+*          name: resvId
 *          required: false
 *          description: 예약ID
 *          type: string
@@ -590,6 +656,192 @@ field.delete('/deleteReservation', async (req: express.Request, res: express.Res
     const resvId = param['resvId'] || null;
 
     let sql = fieldDB.getReservation(resvId);
+    const rows = await db.query(sql)
+    const conn = await db.getConnection();
+    conn.release();
+    if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
+    else throw console.log('에러발생');
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/**
+*  @swagger
+*  paths:
+*   /field/getFieldReview:
+*     get:
+*       summary: 구장 리뷰 조회
+*       tags: [FIELD]
+*       parameters:
+*        - in: query
+*          name: fieldId
+*          required: false
+*          description: 구장ID
+*          type: string
+*        - in: query
+*          name: email
+*          required: false
+*          description: 이메일
+*          type: string
+*        - in: query
+*          name: reviewId
+*          required: false
+*          description: 리뷰ID
+*          type: string
+*       responses:
+*         "200":
+*           description: field like.
+*           content:
+*             application/json:
+*/
+field.get('/getFieldReview', async (req: express.Request, res: express.Response) => {
+  try {
+    const param = JSON.parse(JSON.stringify(req.query));
+    const fieldDB = require('../field/fieldDB');
+    const fieldId = param['fieldId'] || null;
+    const email = param['email'] || null;
+    const reviewId = param['reviewId'] || null;
+
+    let sql = fieldDB.getFieldReview(fieldId, email, reviewId);
+    const rows = await db.query(sql)
+    const conn = await db.getConnection();
+    conn.release();
+    if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
+    else throw console.log('에러발생');
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/**
+*  @swagger
+*  paths:
+*   /field/insertFieldReview:
+*     post:
+*       summary: 구장 리뷰 등록
+*       tags: [FIELD]
+*       parameters:
+*        - in: query
+*          name: fieldId
+*          required: true
+*          description: 구장ID
+*          type: string
+*        - in: query
+*          name: email
+*          required: true
+*          description: 이메일
+*          type: string
+*        - in: query
+*          name: starCnt
+*          required: true
+*          description: 별점(4.5)
+*          type: string
+*        - in: query
+*          name: reviewCon
+*          required: true
+*          description: 리뷰내용
+*          type: string
+*       responses:
+*         "200":
+*           description: field like.
+*           content:
+*             application/json:
+*/
+field.post('/insertFieldReview', async (req: express.Request, res: express.Response) => {
+  try {
+    const param = JSON.parse(JSON.stringify(req.body));
+    const fieldDB = require('../field/fieldDB');
+    const fieldId = param['fieldId'] || null;
+    const email = param['email'] || null;
+    const starCnt = param['starCnt'] || null;
+    const reviewCon = param['reviewCon'] || null;
+
+    let sql = fieldDB.insertFieldReview(fieldId, email, starCnt, reviewCon);
+    const rows = await db.query(sql)
+    const conn = await db.getConnection();
+    conn.release();
+    if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
+    else throw console.log('에러발생');
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/**
+*  @swagger
+*  paths:
+*   /field/updateFieldReview:
+*     post:
+*       summary: 구장 리뷰 수정
+*       tags: [FIELD]
+*       parameters:
+*        - in: query
+*          name: reviewId
+*          required: true
+*          description: 리뷰ID
+*          type: string
+*        - in: query
+*          name: starCnt
+*          required: true
+*          description: 별점(4.5)
+*          type: string
+*        - in: query
+*          name: reviewCon
+*          required: true
+*          description: 리뷰내용
+*          type: string
+*       responses:
+*         "200":
+*           description: field like.
+*           content:
+*             application/json:
+*/
+field.post('/updateFieldReview', async (req: express.Request, res: express.Response) => {
+  try {
+    const param = JSON.parse(JSON.stringify(req.body));
+    const fieldDB = require('../field/fieldDB');
+    const reviewId = param['reviewId'] || null;
+    const starCnt = param['starCnt'] || null;
+    const reviewCon = param['reviewCon'] || null;
+
+    let sql = fieldDB.updateFieldReview(reviewId, starCnt, reviewCon);
+    const rows = await db.query(sql)
+    const conn = await db.getConnection();
+    conn.release();
+    if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
+    else throw console.log('에러발생');
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/**
+*  @swagger
+*  paths:
+*   /field/deleteFieldReview:
+*     delete:
+*       summary: 구장 리뷰 삭제
+*       tags: [FIELD]
+*       parameters:
+*        - in: query
+*          name: reivewId
+*          required: true
+*          description: 리뷰ID
+*          type: string
+*       responses:
+*         "200":
+*           description: field like.
+*           content:
+*             application/json:
+*/
+field.delete('/deleteFieldReview', async (req: express.Request, res: express.Response) => {
+  try {
+    const param = JSON.parse(JSON.stringify(req.query));
+    const fieldDB = require('../field/fieldDB');
+    const reviewId = param['reviewId'];
+
+    let sql = fieldDB.deleteFieldReview(reviewId);
     const rows = await db.query(sql)
     const conn = await db.getConnection();
     conn.release();

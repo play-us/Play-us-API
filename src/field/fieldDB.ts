@@ -51,7 +51,7 @@ const getFieldList = (fieldId:string, fieldTp:string, area:string, searchTxt:str
 
 //구장상세 조회
 const getFieldDetail = (fieldId:string, email:string)=>{
-    let sql = "select a.field_id "+
+    let sql = "select distinct a.field_id "+
         ", a.field_nm "+
         ", (select syscd_nm from sys_code x where x.class_cd = 'SYS002' and x.syscd_cd = a.field_tp) as field_tp " +
         ", (select syscd_nm from sys_code x where x.class_cd = 'SYS006' and x.syscd_cd = a.area) as area " +
@@ -72,10 +72,11 @@ const getFieldDetail = (fieldId:string, email:string)=>{
         ", a.insert_datetime " +
         ", a.insert_datetime " +
         ", (select count(1) from field_like x where x.field_id = a.field_id) as like_cnt " +
+        ", (select count(1) from field_review x where x.field_id = a.field_id) as review_cnt " +
         ", (case when b.like_id is not null then '1' else '0' end) as like_yn " +
         "from field a " +
         "left outer join field_like b on b.field_id = a.field_id and b.email = '" + email + "' " + 
-        "where 1=1 ";
+        "where 1=1 and a.field_id = '1'";
     if(fieldId) sql = sql + " and a.field_id = '" + fieldId  + "'";
     return sql;
 };
@@ -207,26 +208,75 @@ const getReservation = (resvId: string, fieldId: string, email: string, resvDate
 }
 
 //구장 예약 등록
-const insertReservation  = (fieldId:string, email:string, resvDate: Date, resvTime: string, resvState: string, resvPrice: number, remarkTxt: string)=>{
+const insertReservation  = (fieldId:string, email:string, resvDate: Date, resvStartTime: string, resvEndTime: string, resvPrice: number, remarkTxt: string)=>{
     const sql = "INSERT INTO reservation " + 
-        "(resv_id, field_id, email, resv_date, resv_time, resv_state, resv_price, remark_txt, insert_datetime, update_datetime) " +
+        "(resv_id, field_id, email, resv_date, resv_start_time, resv_end_time, resv_state, resv_price, insert_datetime, update_datetime) " +
         " VALUES " +
         "((SELECT IFNULL(MAX(CAST(b.resv_id AS unsigned)) + 1, 1) FROM reservation b), '" +
         fieldId + "', '" +  
         email + "', '" + 
         resvDate + "', '" + 
-        resvTime + "', '" +
-        resvState + "', '" +
-        resvPrice + "', '" +
-        remarkTxt + "', " +
+        resvStartTime + "', '" +
+        resvEndTime + "', '" +
+        "1', " +
+        resvPrice + ", " +
         "DATE_ADD(NOW(), INTERVAL 9 HOUR), DATE_ADD(NOW(), INTERVAL 9 HOUR))";
     return sql;
 }
 
 //구장 예약 삭제
 const deleteReservation  = (resvId:string)=>{
-    const sql = "delete from  reservation where resv_id = '" + resvId + "'" ;
+    const sql = "delete from reservation where resv_id = '" + resvId + "'" ;
     return sql;
 }
 
-module.exports = {getFieldList, getFieldDetail, insertField, updateField, deleteField, getFieldLike, insertFieldLike, deleteFieldLike, getReservation, insertReservation, deleteReservation};
+//구장 리뷰
+const getFieldReview = (fieldId:string, email:string, reviewId:string)=> {
+    let sql = "select review_id, " + 
+        "field_id, " +
+        "email, " +
+        "review_seq, " +
+        "star_cnt, " +
+        "review_con, " +
+        "remark_txt, " +
+        "insert_datetime, " +
+        "update_datetime, " +
+        "from field_review " +
+        "where 1=1 ";
+    if(fieldId) sql = sql + " and field_id = '" + fieldId + "' ";
+    if(email) sql = sql + " and email = '" + email + "' ";
+    if(reviewId) sql = sql + " and review_id = '" + reviewId + "' ";
+}
+
+//구장 리뷰 등록
+const insertFieldReview  = (fieldId:string, email: string, starCnt: string, reviewCon: string)=>{
+    const sql = "INSERT INTO field_review " + 
+        "(review_id, field_id, email, review_seq, star_cnt, review_con, insert_datetime, update_datetime) " +
+        " VALUES " +
+        "((SELECT IFNULL(MAX(CAST(b.review_id AS unsigned)) + 1, 1) FROM field_review b), '" +
+        fieldId + "', '" +  
+        email + "', " + 
+        "(select ifnull(max(CAST(c.review_seq AS unsigned)) + 1, 1) from field_review c where c.field_id = '" + fieldId + "'), '" + 
+        starCnt + "', '" +
+        reviewCon + "', " +
+        "DATE_ADD(NOW(), INTERVAL 9 HOUR), DATE_ADD(NOW(), INTERVAL 9 HOUR))";
+    return sql;
+}
+
+//구장 리뷰 수정
+const updateFieldReview = (reviewId:string, starCnt:string, reviewCon:string) =>{
+    const sql = "UPDATE field_review set " +
+    "star_cnt = '" + starCnt + "'," +
+    "review_con = '" + reviewCon + "', " +
+    "update_datetime = DATE_ADD(NOW(), INTERVAL 9 HOUR) "  +
+    "WHERE review_id = '" + reviewId + "'";
+    return sql;
+}
+
+//구장 리뷰 삭제
+const deleteFieldReview = (reviewId:string)=> {
+    const sql = "DELETE FROM field_review where review_id = '" + reviewId + "'";
+    return sql;
+}
+
+module.exports = {getFieldList, getFieldDetail, insertField, updateField, deleteField, getFieldLike, insertFieldLike, deleteFieldLike, getReservation, insertReservation, deleteReservation, getFieldReview, insertFieldReview, updateFieldReview, deleteFieldReview};
