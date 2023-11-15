@@ -3,6 +3,7 @@ import cors from 'cors';
 
 const app:express.Application = express();
 
+
 //cors
 //app.use(cors()); //모든 접근 허용
 app.use(cors({ origin: 'http://localhost:3000'})); //local
@@ -34,5 +35,9 @@ app.use('/community', community)
 //mypage
 const mypage = require('./mypage/mypageAPI')
 app.use('/mypage', mypage)
+
+//login
+const login = require('./login/loginAPI')
+app.use('/login',login)
 
 app.listen(8080)
