@@ -29,6 +29,11 @@ interface queryType {
  *      - application/json
  *      parameters:
  *        - in: query
+ *          name: email
+ *          required: false
+ *          description: 이메일
+ *          type: string
+ *        - in: query
  *          name: area
  *          required: false
  *          description: 지역(SYS006)
@@ -78,11 +83,12 @@ main.get('/getMainData', async (req: express.Request, res: express.Response) => 
         fieldList: null,
         commuList: null
     };
-    const param = JSON.parse(JSON.stringify(req.params));
+    const param = JSON.parse(JSON.stringify(req.query));
     const commonDB = require('../common/commonDB');
     const fieldDB = require('../field/fieldDB');
     const commuDB = require('../community/communityDB');
     
+    const email = param['email'];
     const fieldId = param['fieldId'];
     const fieldTp = param['fieldTp'];
     const area = param['area'];
@@ -117,7 +123,7 @@ main.get('/getMainData', async (req: express.Request, res: express.Response) => 
     resultMap.fieldList= camelsKeys(fieldList[0]);
 
     // 커뮤니티리스트
-    const commuListSql = commuDB.getCommunityList(commuFieldTp, commuArea, commuSearchTxt, commuPageStart, commuPageEnd);
+    const commuListSql = commuDB.getCommunityList(commuFieldTp, commuArea, commuSearchTxt, commuPageStart, commuPageEnd, email);
     const commuList = await db.query(commuListSql); 
     resultMap.commuList= camelsKeys(commuList[0]);
 

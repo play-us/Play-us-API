@@ -54,7 +54,7 @@ const common = express();
  */
 common.get('/getSysCode', async (req: express.Request, res: express.Response) => {
   try {
-    const param = JSON.parse(JSON.stringify(req.params));
+    const param = JSON.parse(JSON.stringify(req.query));
     const syscdCd = param['syscdCd'];
     const classCd = param['classCd'];
     const rel01Data = param['rel01Data'];
