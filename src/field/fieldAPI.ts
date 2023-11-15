@@ -852,4 +852,88 @@ field.delete('/deleteFieldReview', async (req: express.Request, res: express.Res
   }
 });
 
+/**
+*  @swagger
+*  paths:
+*   /field/getReservationCanDate:
+*     get:
+*       summary: 예약가능일자 조회
+*       tags: [FIELD]
+*       parameters:
+*        - in: query
+*          name: fieldId
+*          required: true
+*          description: 구장ID
+*          type: string
+*        - in: query
+*          name: resvYm
+*          required: true
+*          description: 예약년월 (YYYY-MM)
+*          type: string
+*       responses:
+*         "200":
+*           description: field like.
+*           content:
+*             application/json:
+*/
+field.get('/getReservationCanDate', async (req: express.Request, res: express.Response) => {
+  try {
+    const param = JSON.parse(JSON.stringify(req.query));
+    const fieldDB = require('../field/fieldDB');
+    const fieldId = param['fieldId'];
+    const resvYm = param['resvYm'];
+
+    let sql = fieldDB.getReservationCanDate(fieldId, resvYm);
+    const rows = await db.query(sql)
+    const conn = await db.getConnection();
+    conn.release();
+    if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
+    else throw console.log('에러발생');
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/**
+*  @swagger
+*  paths:
+*   /field/getReservationCanTime:
+*     get:
+*       summary: 예약가능시간 조회
+*       tags: [FIELD]
+*       parameters:
+*        - in: query
+*          name: fieldId
+*          required: true
+*          description: 구장ID
+*          type: string
+*        - in: query
+*          name: resvDate
+*          required: true
+*          description: 예약일자 (YYYY-MM-DD)
+*          type: string
+*       responses:
+*         "200":
+*           description: field like.
+*           content:
+*             application/json:
+*/
+field.get('/getReservationCanTime', async (req: express.Request, res: express.Response) => {
+  try {
+    const param = JSON.parse(JSON.stringify(req.query));
+    const fieldDB = require('../field/fieldDB');
+    const fieldId = param['fieldId'];
+    const resvDate = param['resvDate'];
+
+    let sql = fieldDB.getReservationCanTime(fieldId, resvDate);
+    const rows = await db.query(sql)
+    const conn = await db.getConnection();
+    conn.release();
+    if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
+    else throw console.log('에러발생');
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 module.exports = field;

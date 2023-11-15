@@ -170,8 +170,10 @@ const getFieldLike = (fieldId:string, email:string)=>{
 
 //구장좋아요 insert
 const insertFieldLike = (fieldId:string, email:string)=> {
-    const sql = "insert into field_like ( like_id, field_id, email, insert_datetime, update_datetime  )" + 
-        "values ( (select ifnull(max(CAST(b.like_id AS unsigned)) + 1, 1) from field_like b),  '" + fieldId + "', '" + email + "', DATE_ADD(NOW(), INTERVAL 9 HOUR), DATE_ADD(NOW(), INTERVAL 9 HOUR))";
+    const sql = "insert into community_wish ( like_id, field_id, email, insert_datetime, update_datetime  )" + 
+    "SELECT (select ifnull(max(CAST(b.like_id AS unsigned)) + 1, 1) from field_like b) ,'" + fieldId + "', '" + email + "', " +
+    " DATE_ADD(NOW(), INTERVAL 9 HOUR), DATE_ADD(NOW(), INTERVAL 9 HOUR) " +
+    " FROM DUAL WHERE NOT EXISTS (SELECT email FROM field_like where field_id = '" + fieldId + "' and email = '" + email + "')"
     return sql;
 }
 
@@ -279,4 +281,62 @@ const deleteFieldReview = (reviewId:string)=> {
     return sql;
 }
 
-module.exports = {getFieldList, getFieldDetail, insertField, updateField, deleteField, getFieldLike, insertFieldLike, deleteFieldLike, getReservation, insertReservation, deleteReservation, getFieldReview, insertFieldReview, updateFieldReview, deleteFieldReview};
+
+//예약가능일자
+const getReservationCanDate = (fieldId: string, resvYm: string)=> {
+    const sql = `WITH RECURSIVE A AS ( 
+            SELECT 0 AS LEVEL 
+             UNION ALL SELECT 1+A.LEVEL 
+              FROM A 
+             WHERE A.LEVEL < (
+                    SELECT DATEDIFF(LAST_DAY('` + resvYm +`'),  '` + resvYm +`') 
+                    ) 
+                ) 
+            , dd as(
+                SELECT ADDDATE('` + resvYm + `', INTERVAL LEVEL DAY) as dd FROM A
+            )
+            , all_dd as (
+                select a.dd as resv_date
+                     , (case when c.field_id is not null then 1 else 0 end) as resv_yn
+                  from dd a 
+                  left outer join field b on b.field_id = '` + fieldId + `' 
+                  left outer join field_opening_days c on c.field_id = b.field_id and c.opening_day = DAYOFWEEK( a.dd )-1 
+                where 1=1 
+                group by dd
+               ) 
+               select resv_date
+                 from all_dd
+                where resv_yn = '0'`;
+    return sql;
+}
+
+//예약가능시간
+const getReservationCanTime = (fieldId: string, resvDate: string)=> {
+    const sql = `WITH RECURSIVE A AS(
+        SELECT left(opening_hours, 2) as LEVEL
+           FROM field 
+           WHERE FIELD_ID = '` + fieldId + `'
+         UNION ALL
+         SELECT 1+A.LEVEL
+         FROM A
+         WHERE A.LEVEL < (
+           SELECT left(closing_hours, 2) -1
+           FROM field 
+           WHERE FIELD_ID = '` + fieldId + `'
+         )
+       )
+       select concat(LEVEL, ':00:00') AS resv_time
+            , (case when (select count(1) 
+                from reservation x 
+              where x.resv_date = '` + resvDate + `' and x.field_id = '` + fieldId + `' 
+                and a.level >= left(x.resv_start_time, 2) 
+                and a.level < left(x.resv_end_time, 2)
+               ) > 0 then '0' else '1' end) as resv_yn
+          from A a
+           where 1=1
+          group by level
+         `;
+    return sql;
+}
+
+module.exports = {getFieldList, getFieldDetail, insertField, updateField, deleteField, getFieldLike, insertFieldLike, deleteFieldLike, getReservation, insertReservation, deleteReservation, getFieldReview, insertFieldReview, updateFieldReview, deleteFieldReview, getReservationCanDate, getReservationCanTime};
