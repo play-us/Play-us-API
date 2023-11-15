@@ -432,7 +432,7 @@ community.get('/getCommunityCommentList', async (req: express.Request, res: expr
 *           content:
 *             application/json:
 */
-community.get('/insertCommunityComment', async (req: express.Request, res: express.Response) => {
+community.post('/insertCommunityComment', async (req: express.Request, res: express.Response) => {
   try {
     const param = JSON.parse(JSON.stringify(req.body));
     const communityDB = require('../community/communityDB');
@@ -440,7 +440,7 @@ community.get('/insertCommunityComment', async (req: express.Request, res: expre
     const commentTxt = param['commentTxt'];
     const email = param['email'] || 'chu';
 
-    let sql = communityDB.insertCommunityComment('2', 'api test9', 'chu');
+    let sql = communityDB.insertCommunityComment(commuId, commentTxt, email);
     const rows = await db.query(sql);
     const conn = await db.getConnection();
     conn.release();
