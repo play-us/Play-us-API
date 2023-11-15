@@ -159,7 +159,9 @@ const deleteCommunityCommentAll = (commuId:string)=> {
 //커뮤니티좋아요 insert
 const insertCommunityWish = (commuId:string, email:string)=> {
     const sql = "insert into community_wish ( wish_id, commu_id, email, insert_datetime, update_datetime  )" + 
-        "values ( (select ifnull(max(CAST(b.wish_id AS unsigned)) + 1, 1) from community_wish b),  '" + commuId + "', '" + email + "', DATE_ADD(NOW(), INTERVAL 9 HOUR), DATE_ADD(NOW(), INTERVAL 9 HOUR))";
+    "SELECT (select ifnull(max(CAST(b.wish_id AS unsigned)) + 1, 1) from community_wish b) ,'" + commuId + "', '" + email + "', " +
+    " DATE_ADD(NOW(), INTERVAL 9 HOUR), DATE_ADD(NOW(), INTERVAL 9 HOUR) " +
+    " FROM DUAL WHERE NOT EXISTS (SELECT email FROM community_wish where commu_id = '" + commuId + "' and email = '" + email + "')"
     return sql;
 }
 
