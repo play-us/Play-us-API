@@ -282,8 +282,8 @@ const deleteFieldReview = (reviewId:string)=> {
 }
 
 
-//예약가능일자
-const getReservationCanDate = (fieldId: string, resvYm: string)=> {
+//예약불가능일자
+const getReservationImpossibleDate = (fieldId: string, resvYm: string)=> {
     const sql = `WITH RECURSIVE A AS ( 
             SELECT 0 AS LEVEL 
              UNION ALL SELECT 1+A.LEVEL 
@@ -311,7 +311,7 @@ const getReservationCanDate = (fieldId: string, resvYm: string)=> {
 }
 
 //예약가능시간
-const getReservationCanTime = (fieldId: string, resvDate: string)=> {
+const getReservationPossibleTime = (fieldId: string, resvDate: string)=> {
     const sql = `WITH RECURSIVE A AS(
         SELECT left(opening_hours, 2) as LEVEL
            FROM field 
@@ -339,4 +339,4 @@ const getReservationCanTime = (fieldId: string, resvDate: string)=> {
     return sql;
 }
 
-module.exports = {getFieldList, getFieldDetail, insertField, updateField, deleteField, getFieldLike, insertFieldLike, deleteFieldLike, getReservation, insertReservation, deleteReservation, getFieldReview, insertFieldReview, updateFieldReview, deleteFieldReview, getReservationCanDate, getReservationCanTime};
+module.exports = {getFieldList, getFieldDetail, insertField, updateField, deleteField, getFieldLike, insertFieldLike, deleteFieldLike, getReservation, insertReservation, deleteReservation, getFieldReview, insertFieldReview, updateFieldReview, deleteFieldReview, getReservationImpossibleDate, getReservationPossibleTime};

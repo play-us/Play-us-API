@@ -855,9 +855,9 @@ field.delete('/deleteFieldReview', async (req: express.Request, res: express.Res
 /**
 *  @swagger
 *  paths:
-*   /field/getReservationCanDate:
+*   /field/getReservationImpossibleDate:
 *     get:
-*       summary: 예약가능일자 조회
+*       summary: 예약불가능일자 조회
 *       tags: [FIELD]
 *       parameters:
 *        - in: query
@@ -876,14 +876,14 @@ field.delete('/deleteFieldReview', async (req: express.Request, res: express.Res
 *           content:
 *             application/json:
 */
-field.get('/getReservationCanDate', async (req: express.Request, res: express.Response) => {
+field.get('/getReservationImpossibleDate', async (req: express.Request, res: express.Response) => {
   try {
     const param = JSON.parse(JSON.stringify(req.query));
     const fieldDB = require('../field/fieldDB');
     const fieldId = param['fieldId'];
     const resvYm = param['resvYm'];
 
-    let sql = fieldDB.getReservationCanDate(fieldId, resvYm);
+    let sql = fieldDB.getReservationImpossibleDate(fieldId, resvYm);
     const rows = await db.query(sql)
     const conn = await db.getConnection();
     conn.release();
@@ -897,7 +897,7 @@ field.get('/getReservationCanDate', async (req: express.Request, res: express.Re
 /**
 *  @swagger
 *  paths:
-*   /field/getReservationCanTime:
+*   /field/getReservationPossibleTime:
 *     get:
 *       summary: 예약가능시간 조회
 *       tags: [FIELD]
@@ -918,14 +918,14 @@ field.get('/getReservationCanDate', async (req: express.Request, res: express.Re
 *           content:
 *             application/json:
 */
-field.get('/getReservationCanTime', async (req: express.Request, res: express.Response) => {
+field.get('/getReservationPossibleTime', async (req: express.Request, res: express.Response) => {
   try {
     const param = JSON.parse(JSON.stringify(req.query));
     const fieldDB = require('../field/fieldDB');
     const fieldId = param['fieldId'];
     const resvDate = param['resvDate'];
 
-    let sql = fieldDB.getReservationCanTime(fieldId, resvDate);
+    let sql = fieldDB.getReservationPossibleTime(fieldId, resvDate);
     const rows = await db.query(sql)
     const conn = await db.getConnection();
     conn.release();
