@@ -41,6 +41,56 @@ interface queryType {
 *          required: false
 *          description: 좋아요리스트 페이지끝
 *          type: string
+*        - in: query
+*          name: reviewPageStart
+*          required: false
+*          description: 리뷰리스트 페이지시작
+*          type: string
+*        - in: query
+*          name: reviewPageEnd
+*          required: false
+*          description: 리뷰리스트 페이지끝
+*          type: string
+*        - in: query
+*          name: resvPageStart
+*          required: false
+*          description: 예약리스트 페이지시작
+*          type: string
+*        - in: query
+*          name: resvPageEnd
+*          required: false
+*          description: 예약리스트 페이지끝
+*          type: string
+*        - in: query
+*          name: commuPageStart
+*          required: false
+*          description: 커뮤니티리스트 페이지시작
+*          type: string
+*        - in: query
+*          name: commuPageEnd
+*          required: false
+*          description: 커뮤니티리스트 페이지끝
+*          type: string
+*        - in: query
+*          name: commuWishPageStart
+*          required: false
+*          description: 커뮤니티관심리스트 페이지시작
+*          type: string
+*        - in: query
+*          name: commuWishPageEnd
+*          required: false
+*          description: 커뮤니티관심리스트 페이지끝
+*          type: string
+*        - in: query
+*          name: commuCommentPageStart
+*          required: false
+*          description: 커뮤니티댓글리스트 페이지시작
+*          type: string
+*        - in: query
+*          name: commuCommentPageEnd
+*          required: false
+*          description: 커뮤니티댓글리스트 페이지끝
+*          type: string
 *       responses:
 *         "200":
 *           description: filed list.
@@ -70,35 +120,49 @@ mypage.get('/getMyPageData', async(req: express.Request,res:express.Response)=>{
         const commuDB = require('../community/communityDB');
         const mypageDB = require('../mypage/mypageDB');
         const email = param['email'];
+
         const likePageStart = param['likePageStart'];
         const likePageEnd = param['likePageEnd'];
+
+        const reviewPageStart = param['reviewPageStart'];
+        const reviewPageEnd = param['reviewPageEnd'];
+
+        const resvPageStart = param['resvPageStart'];
+        const resvPageEnd = param['resvPageEnd'];
+
+        const commuPageStart = param['commuPageStart'];
+        const commuPageEnd = param['commuPageEnd'];
+
+        const commuWishPageStart = param['commuWishPageStart'];
+        const commuWishPageEnd = param['commuWishPageEnd'];
+
         const commuCommentPageStart = param['commuCommentPageStart'];
         const commuCommentPageEnd = param['commuCommentPageEnd'];
 
         //구장 좋아요 리스트
-        const filedLikeListSql = mypageDB.getLikeList(email, likePageStart, likePageEnd);
+        const filedLikeListSql = mypageDB.getMyFieldLikeList(email, likePageStart, likePageEnd);
         const filedLikeList = await db.query(filedLikeListSql); 
         resultMap.filedLikeList= camelsKeys(filedLikeList[0]);
         
         //리뷰 리스트
-        // const reviewListSql = fieldDB.getLikeList(email);
-        // const reviewList = await db.query(reviewListSql); 
-        // resultMap.reviewList= camelsKeys(reviewList[0]);
+        const reviewListSql = mypageDB.getMyReviewList(email, reviewPageStart, reviewPageEnd);
+        const reviewList = await db.query(reviewListSql); 
+        resultMap.reviewList= camelsKeys(reviewList[0]);
         
         //예약리스트
-        const reservationListSql = fieldDB.getReservation(null, null, email, null, null, null, null);
+        const reservationListSql = fieldDB.getReservation(null, null, email, null, null, null, null, resvPageStart, resvPageEnd);
         const reservationList = await db.query(reservationListSql); 
         resultMap.reservationList= camelsKeys(reservationList[0]);
         
         //커뮤니티리스트
-        const commuListSql = commuDB.getCommunityList(null, null, null, null, null, email);
+        const commuListSql = mypageDB.getMyCommunityList(email, commuPageStart, commuPageEnd);
         const commuList = await db.query(commuListSql); 
         resultMap.commuList= camelsKeys(commuList[0]);
         
         //커뮤니티관심 리스트
-        // const commuWishListSql = commuDB.getCommunityList(null, null, null, null, null, email);
-        // const commuWishList = await db.query(commuWishListSql); 
-        // resultMap.commuWishList= camelsKeys(commuWishList[0]);
+        const commuWishListSql = mypageDB.getMyCommunityWishList(email, commuWishPageStart, commuWishPageEnd);
+        const commuWishList = await db.query(commuWishListSql); 
+        resultMap.commuWishList= camelsKeys(commuWishList[0]);
         
         //커뮤니티댓글리스트
         const commuCommentListSql = commuDB.getCommunityCommentList(null, email, commuCommentPageStart, commuCommentPageEnd);

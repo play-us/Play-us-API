@@ -535,6 +535,16 @@ field.post('/fieldLike', async (req: express.Request, res: express.Response) => 
 *          required: false
 *          description: 예약상태 (SYS007)
 *          type: string
+*        - in: query
+*          name: pageStart
+*          required: false
+*          description: 페이지시작
+*          type: number
+*        - in: query
+*          name: pageEnd
+*          required: false
+*          description: 페이지끝
+*          type: number
 *       responses:
 *         "200":
 *           description: field like.
@@ -552,8 +562,10 @@ field.get('/getReservation', async (req: express.Request, res: express.Response)
     const resvStartTime = param['resvStartTime'] || null;
     const resvEndTime = param['resvEndTime'] || null;
     const resvState = param['resvState'] || null;
+    const pageStart = param['pageStart'] || null;
+    const pageEnd = param['pageEnd'] || null;
 
-    let sql = fieldDB.getReservation(resvId, fieldId, email, resvDate, resvStartTime, resvEndTime, resvState);
+    let sql = fieldDB.getReservation(resvId, fieldId, email, resvDate, resvStartTime, resvEndTime, resvState, pageStart, pageEnd);
     const rows = await db.query(sql)
     const conn = await db.getConnection();
     conn.release();
