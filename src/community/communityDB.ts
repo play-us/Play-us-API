@@ -30,7 +30,8 @@ const getCommunityDetail = (commuId:string, email:string)=>{
     let sql = `SELECT a.commu_id 
         , a.commu_title  
         , a.commu_txt  
-        , a.email  
+        , a.email 
+        , (select x.name from member x where x.email = a.email) as name
         , (select syscd_nm from sys_code x where x.class_cd = 'SYS002' and x.syscd_cd = a.field_tp) as field_tp  
         , (select syscd_nm from sys_code x where x.class_cd = 'SYS006' and x.syscd_cd = a.area) as area  
         , a.dead_line  
