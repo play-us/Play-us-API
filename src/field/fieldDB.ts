@@ -254,6 +254,7 @@ const getFieldReview = (fieldId:string, email:string, reviewId:string)=> {
     if(fieldId) sql = sql + ` and field_id = '${fieldId}' `;
     if(email) sql = sql + ` and email = '${email}' `;
     if(reviewId) sql = sql + ` and review_id = '${reviewId}' `;
+    return sql;
 }
 
 //구장 리뷰 등록
