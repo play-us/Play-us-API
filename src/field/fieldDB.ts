@@ -294,11 +294,11 @@ const getReservationImpossibleDate = (fieldId: string, resvYm: string)=> {
              UNION ALL SELECT 1+A.LEVEL 
               FROM A 
              WHERE A.LEVEL < (
-                    SELECT DATEDIFF(LAST_DAY('` + resvYm +`'),  '` + resvYm +`') 
+                    SELECT DATEDIFF(LAST_DAY('` + resvYm +`-01'),  '` + resvYm +`-01') 
                     ) 
                 ) 
             , dd as(
-                SELECT ADDDATE('` + resvYm + `', INTERVAL LEVEL DAY) as dd FROM A
+                SELECT ADDDATE('` + resvYm + `-01', INTERVAL LEVEL DAY) as dd FROM A
             )
             , all_dd as (
                 select a.dd as resv_date
