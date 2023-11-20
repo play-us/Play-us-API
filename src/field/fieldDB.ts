@@ -239,21 +239,21 @@ const deleteReservation  = (resvId:string)=>{
 
 //구장 리뷰
 const getFieldReview = (fieldId:string, email:string, reviewId:string)=> {
-    let sql = "select review_id, " + 
-        "field_id, " +
-        "email, " +
-        "(select x.name from member x where x.email = a.email) as name, " + 
-        "review_seq, " +
-        "star_cnt, " +
-        "review_con, " +
-        "remark_txt, " +
-        "insert_datetime, " +
-        "update_datetime, " +
-        "from field_review a" +
-        "where 1=1 ";
-    if(fieldId) sql = sql + " and field_id = '" + fieldId + "' ";
-    if(email) sql = sql + " and email = '" + email + "' ";
-    if(reviewId) sql = sql + " and review_id = '" + reviewId + "' ";
+    let sql = `select review_id,  
+        field_id, 
+        email, 
+        (select x.name from member x where x.email = a.email) as name,  
+        review_seq, 
+        star_cnt, 
+        review_con, 
+        remark_txt, 
+        insert_datetime, 
+        update_datetime 
+        from field_review a
+        where 1=1 `;
+    if(fieldId) sql = sql + ` and field_id = '${fieldId}' `;
+    if(email) sql = sql + ` and email = '${email}' `;
+    if(reviewId) sql = sql + ` and review_id = '${reviewId}' `;
 }
 
 //구장 리뷰 등록
