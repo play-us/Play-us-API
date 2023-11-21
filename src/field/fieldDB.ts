@@ -239,21 +239,26 @@ const deleteReservation  = (resvId:string)=>{
 
 //구장 리뷰
 const getFieldReview = (fieldId:string, email:string, reviewId:string)=> {
-    let sql = `select review_id,  
-        field_id, 
-        email, 
+    let sql = `select a.review_id,  
+        a.field_id,
+        a.resv_id,
+        b.resv_date,
+        b.resv_start_time,
+        b.resv_end_time,
+        a.email,
         (select x.name from member x where x.email = a.email) as name,  
-        review_seq, 
-        star_cnt, 
-        review_con, 
-        remark_txt, 
-        insert_datetime, 
-        update_datetime 
+        a.review_seq, 
+        a.star_cnt, 
+        a.review_con, 
+        a.remark_txt, 
+        a.insert_datetime, 
+        a.update_datetime 
         from field_review a
+        left outer join reservation b on b.resv_id = a.resv_id
         where 1=1 `;
-    if(fieldId) sql = sql + ` and field_id = '${fieldId}' `;
-    if(email) sql = sql + ` and email = '${email}' `;
-    if(reviewId) sql = sql + ` and review_id = '${reviewId}' `;
+    if(fieldId) sql = sql + ` and a.field_id = '${fieldId}' `;
+    if(email) sql = sql + ` and a.email = '${email}' `;
+    if(reviewId) sql = sql + ` and a.review_id = '${reviewId}' `;
     return sql;
 }
 
