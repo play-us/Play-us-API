@@ -740,6 +740,11 @@ field.get('/getFieldReview', async (req: express.Request, res: express.Response)
 *          description: 구장ID
 *          type: string
 *        - in: query
+*          name: resvId
+*          required: true
+*          description: 예약ID
+*          type: string
+*        - in: query
 *          name: email
 *          required: true
 *          description: 이메일
@@ -765,11 +770,12 @@ field.post('/insertFieldReview', async (req: express.Request, res: express.Respo
     const param = JSON.parse(JSON.stringify(req.body));
     const fieldDB = require('../field/fieldDB');
     const fieldId = param['fieldId'] || null;
+    const resvId = param['resvId'] || null;
     const email = param['email'] || null;
     const starCnt = param['starCnt'] || null;
     const reviewCon = param['reviewCon'] || null;
 
-    let sql = fieldDB.insertFieldReview(fieldId, email, starCnt, reviewCon);
+    let sql = fieldDB.insertFieldReview(fieldId, resvId, email, starCnt, reviewCon);
     const rows = await db.query(sql)
     const conn = await db.getConnection();
     conn.release();

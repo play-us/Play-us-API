@@ -263,17 +263,19 @@ const getFieldReview = (fieldId:string, email:string, reviewId:string)=> {
 }
 
 //구장 리뷰 등록
-const insertFieldReview  = (fieldId:string, email: string, starCnt: string, reviewCon: string)=>{
-    const sql = "INSERT INTO field_review " + 
-        "(review_id, field_id, email, review_seq, star_cnt, review_con, insert_datetime, update_datetime) " +
-        " VALUES " +
-        "((SELECT IFNULL(MAX(CAST(b.review_id AS unsigned)) + 1, 1) FROM field_review b), '" +
-        fieldId + "', '" +  
-        email + "', " + 
-        "(select ifnull(max(CAST(c.review_seq AS unsigned)) + 1, 1) from field_review c where c.field_id = '" + fieldId + "'), '" + 
-        starCnt + "', '" +
-        reviewCon + "', " +
-        "DATE_ADD(NOW(), INTERVAL 9 HOUR), DATE_ADD(NOW(), INTERVAL 9 HOUR))";
+const insertFieldReview  = (fieldId:string, resvId:string, email: string, starCnt: string, reviewCon: string)=>{
+    const sql = `INSERT INTO field_review  
+        (review_id, field_id, resv_id, email, review_seq, star_cnt, review_con, insert_datetime, update_datetime) 
+         VALUES 
+        ((SELECT IFNULL(MAX(CAST(b.review_id AS unsigned)) + 1, 1) FROM field_review b), 
+        '${fieldId}',  
+        '${resvId}',  
+        '${email}',   
+        (select ifnull(max(CAST(c.review_seq AS unsigned)) + 1, 1) from field_review c where c.field_id = '${fieldId}'), 
+        '${starCnt}', 
+        '${reviewCon}', 
+        DATE_ADD(NOW(), INTERVAL 9 HOUR), 
+        DATE_ADD(NOW(), INTERVAL 9 HOUR))`;
     return sql;
 }
 
