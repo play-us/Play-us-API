@@ -3,7 +3,7 @@ import 'dotenv/config'
 
 const db = mysql.createPool({
   connectionLimit: 10,
-  host: 'play-us.ca59ltoltffi.us-east-2.rds.amazonaws.com',
+  host: 'play-us2.cyxdr83yxc4v.ap-northeast-2.rds.amazonaws.com',
   user: 'root',
   password: '123qwe```',
   database: 'play-us'
