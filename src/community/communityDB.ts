@@ -70,8 +70,8 @@ const insertCommunity = (commuTitle:string, commuTxt:string, email:string, area:
     '${deadLine}', 
     '${memberCnt}', 
     '${fieldTp}',  
-    DATE_ADD(NOW(), INTERVAL 9 HOUR),
-    DATE_ADD(NOW(), INTERVAL 9 HOUR) 
+    NOW(),
+    NOW() 
     )`;
     return sql;
 }
@@ -86,7 +86,7 @@ const updateCommunity = (commuId:string, commuTitle:string, commuTxt:string, ema
     dead_line = '${deadLine}',  
     member_cnt = ${memberCnt},  
     field_tp = '${fieldTp}',  
-    update_datetime = DATE_ADD(NOW(), INTERVAL 9 HOUR)  
+    update_datetime = NOW()  
     WHERE commu_id = '${commuId}'`;
     return sql;
 }
@@ -134,8 +134,8 @@ const insertCommunityComment = (commuId:string, commentTxt:string, email:string)
     (select ifnull(max(CAST(c.comment_seq AS unsigned)) + 1, 1) from community_comment c where c.commu_id = '${commuId}'),  
     '${email}', 
     '${commentTxt}',  
-    DATE_ADD(NOW(), INTERVAL 9 HOUR),
-    DATE_ADD(NOW(), INTERVAL 9 HOUR)) `;
+    NOW(),
+    NOW()) `;
     return sql;
 }
 
@@ -143,7 +143,7 @@ const insertCommunityComment = (commuId:string, commentTxt:string, email:string)
 const updateCommunityComment = (commentId:string, commentTxt:string) =>{
     const sql = `UPDATE community_comment set 
     comment_txt = '${commentTxt}',
-    update_datetime = DATE_ADD(NOW(), INTERVAL 9 HOUR)  
+    update_datetime = NOW()  
     WHERE comment_id = '${commentId}'`;
     return sql;
 }
@@ -163,7 +163,7 @@ const deleteCommunityCommentAll = (commuId:string)=> {
 const insertCommunityWish = (commuId:string, email:string)=> {
     const sql = `insert into community_wish ( wish_id, commu_id, email, insert_datetime, update_datetime  ) 
     SELECT (select ifnull(max(CAST(b.wish_id AS unsigned)) + 1, 1) from community_wish b) ,'${commuId}', '${email}',
-     DATE_ADD(NOW(), INTERVAL 9 HOUR), DATE_ADD(NOW(), INTERVAL 9 HOUR)
+     NOW(), NOW() 
      FROM DUAL WHERE NOT EXISTS (SELECT email FROM community_wish where commu_id = '${commuId}' and email = '${email}')`;
     return sql;
 }

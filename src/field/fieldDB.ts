@@ -122,7 +122,7 @@ const insertField = (fieldNm:string, fieldTp:string, area:string, addr:string, l
         '${parkingTp}', 
         '${rentalSup}',
         '1',
-        NULL, DATE_ADD(NOW(), INTERVAL 9 HOUR), DATE_ADD(NOW(), INTERVAL 9 HOUR))`;
+        NULL, NOW(), NOW())`;
     return sql;
 }
 
@@ -144,7 +144,7 @@ const updateField = (fieldId:string, fieldNm:string, fieldTp:string, area:string
     swrm_yn = '${swrmYn}', 
     parking_tp = '${parkingTp}', 
     rental_sup = '${rentalSup}', 
-    update_datetime = DATE_ADD(NOW(), INTERVAL 9 HOUR) 
+    update_datetime = NOW()  
     WHERE field_id = '${fieldId}'`;
     return sql;
 }
@@ -172,7 +172,7 @@ const getFieldLike = (fieldId:string, email:string)=>{
 const insertFieldLike = (fieldId:string, email:string)=> {
     const sql = "insert into community_wish ( like_id, field_id, email, insert_datetime, update_datetime  )" + 
     "SELECT (select ifnull(max(CAST(b.like_id AS unsigned)) + 1, 1) from field_like b) ,'" + fieldId + "', '" + email + "', " +
-    " DATE_ADD(NOW(), INTERVAL 9 HOUR), DATE_ADD(NOW(), INTERVAL 9 HOUR) " +
+    " NOW(), NOW() " +
     " FROM DUAL WHERE NOT EXISTS (SELECT email FROM field_like where field_id = '" + fieldId + "' and email = '" + email + "')"
     return sql;
 }
@@ -227,7 +227,7 @@ const insertReservation  = (fieldId:string, email:string, resvDate: Date, resvSt
         resvEndTime + "', '" +
         "1', " +
         resvPrice + ", " +
-        "DATE_ADD(NOW(), INTERVAL 9 HOUR), DATE_ADD(NOW(), INTERVAL 9 HOUR))";
+        "NOW(), NOW())";
     return sql;
 }
 
@@ -274,8 +274,8 @@ const insertFieldReview  = (fieldId:string, resvId:string, email: string, starCn
         (select ifnull(max(CAST(c.review_seq AS unsigned)) + 1, 1) from field_review c where c.field_id = '${fieldId}'), 
         '${starCnt}', 
         '${reviewCon}', 
-        DATE_ADD(NOW(), INTERVAL 9 HOUR), 
-        DATE_ADD(NOW(), INTERVAL 9 HOUR))`;
+        NOW(), 
+        NOW())`;
     return sql;
 }
 
@@ -284,7 +284,7 @@ const updateFieldReview = (reviewId:string, starCnt:string, reviewCon:string) =>
     const sql = "UPDATE field_review set " +
     "star_cnt = '" + starCnt + "'," +
     "review_con = '" + reviewCon + "', " +
-    "update_datetime = DATE_ADD(NOW(), INTERVAL 9 HOUR) "  +
+    "update_datetime = NOW() "  +
     "WHERE review_id = '" + reviewId + "'";
     return sql;
 }
