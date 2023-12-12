@@ -191,14 +191,15 @@ const getReservation = (resvId: string, fieldId: string, email: string, resvDate
         ", field_id " + 
         ", email " +
         ", resv_date " +
-        ", resv_time " +
+        ", resv_start_time " +
+        ", resv_end_time " +
         ", resv_state " +
         ", (select syscd_nm from sys_code x where x.class_cd = 'SYS007' and x.syscd_cd = a.resv_state) as resv_state_nm " +
         ", resv_price " +
         ", remark_txt " +
         ", insert_datetime " +
         ", update_datetime " +
-        " from reservation " +
+        " from reservation a" +
         " where 1=1 ";
     if(resvId) sql = sql + " and resv_id = '" + resvId + "' ";
     if(fieldId) sql = sql + " and field_id = '" + fieldId + "' ";
