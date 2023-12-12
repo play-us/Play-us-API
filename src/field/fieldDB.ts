@@ -191,6 +191,7 @@ const getReservation = (resvId: string, fieldId: string, email: string, resvDate
         ", a.field_id " + 
         ", b.field_nm " + 
         ", (select syscd_nm from sys_code x where x.class_cd = 'SYS006' and x.syscd_cd = b.area) as area " +
+        ", b.addr " +
         ", a.email " +
         ", a.resv_date " +
         ", a.resv_start_time " +
