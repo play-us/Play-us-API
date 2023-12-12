@@ -188,27 +188,30 @@ const deleteFieldLike = (fieldId:string, email:string)=>{
 //구장 예약 정보 조회
 const getReservation = (resvId: string, fieldId: string, email: string, resvDate: Date, resvStartTime:string, resvEndTime:string, resvState:string, pageStart:number, pageEnd: number) => {
     let sql = "SELECT resv_id " + 
-        ", field_id " + 
-        ", email " +
-        ", resv_date " +
-        ", resv_start_time " +
-        ", resv_end_time " +
-        ", resv_state " +
+        ", a.field_id " + 
+        ", b.field_nm " + 
+        ", (select syscd_nm from sys_code x where x.class_cd = 'SYS006' and x.syscd_cd = b.area) as area " +
+        ", a.email " +
+        ", a.resv_date " +
+        ", a.resv_start_time " +
+        ", a.resv_end_time " +
+        ", a.resv_state " +
         ", (select syscd_nm from sys_code x where x.class_cd = 'SYS007' and x.syscd_cd = a.resv_state) as resv_state_nm " +
-        ", resv_price " +
-        ", remark_txt " +
-        ", insert_datetime " +
-        ", update_datetime " +
+        ", a.resv_price " +
+        ", a.remark_txt " +
+        ", a.insert_datetime " +
+        ", a.update_datetime " +
         " from reservation a" +
+        " inner join field b on b.field_id = a.field_id "
         " where 1=1 ";
-    if(resvId) sql = sql + " and resv_id = '" + resvId + "' ";
-    if(fieldId) sql = sql + " and field_id = '" + fieldId + "' ";
-    if(email) sql = sql + " and email = '" + email + "' ";
-    if(resvDate) sql = sql + " and resv_date = '" + resvDate + "' ";
-    if(resvStartTime) sql = sql + " and resv_start_time = '" + resvStartTime + "' ";
-    if(resvEndTime) sql = sql + " and resv_end_time = '" + resvEndTime + "' ";
-    if(resvState) sql = sql + " and resv_state = '" + resvState + "' ";
-    sql = sql + " order by resv_date desc, insert_datetime desc ";
+    if(resvId) sql = sql + " and a.resv_id = '" + resvId + "' ";
+    if(fieldId) sql = sql + " and a.field_id = '" + fieldId + "' ";
+    if(email) sql = sql + " and a.email = '" + email + "' ";
+    if(resvDate) sql = sql + " and a.resv_date = '" + resvDate + "' ";
+    if(resvStartTime) sql = sql + " and a.resv_start_time = '" + resvStartTime + "' ";
+    if(resvEndTime) sql = sql + " and a.resv_end_time = '" + resvEndTime + "' ";
+    if(resvState) sql = sql + " and a.resv_state = '" + resvState + "' ";
+    sql = sql + " order by resv_date desc, a.insert_datetime desc ";
     if(pageStart && pageEnd){
         sql = sql + ' limit ' + pageStart + ', ' + pageEnd;
     }
