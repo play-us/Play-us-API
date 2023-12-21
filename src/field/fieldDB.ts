@@ -341,6 +341,7 @@ const deleteReservation = (resvId: string) => {
 //구장 예약 취소
 const updateReservationCancel = (resvId: string) => {
   const sql = `update reservation set resv_state = '2' where resv_id = '${resvId}'`;
+  return sql;
 };
 
 //구장 리뷰
