@@ -280,7 +280,7 @@ const getReservation = (
     ", a.remark_txt " +
     ", a.insert_datetime " +
     ", a.update_datetime " +
-    ", (case when count(c.review_id) > 0 then '1' else '0' end) as review_yn " +
+    ", (case when c.review_id is not null then '1' else '0' end) as review_yn " +
     " from reservation a" +
     " inner join field b on b.field_id = a.field_id " +
     " left outer join field_review c on c.resv_id = a.resv_id " +
