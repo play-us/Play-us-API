@@ -265,7 +265,7 @@ const getReservation = (
   pageEnd: number
 ) => {
   let sql =
-    "SELECT resv_id " +
+    "SELECT a.resv_id " +
     ", a.field_id " +
     ", b.field_nm " +
     ", (select syscd_nm from sys_code x where x.class_cd = 'SYS006' and x.syscd_cd = b.area) as area " +
