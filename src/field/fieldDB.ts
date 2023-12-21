@@ -283,7 +283,7 @@ const getReservation = (
     ", (case when count(c.review_id) > 0 then '1' else '0' end) as review_yn " +
     " from reservation a" +
     " inner join field b on b.field_id = a.field_id " +
-    " left outer join field_review c on c.field_id = a.field_id and c.email = a.email " +
+    " left outer join field_review c on c.resv_id = a.resv_id " +
     " where 1=1 ";
   if (resvId) sql = sql + " and a.resv_id = '" + resvId + "' ";
   if (fieldId) sql = sql + " and a.field_id = '" + fieldId + "' ";
