@@ -345,7 +345,7 @@ const updateReservationCancel = (resvId: string) => {
 };
 
 //구장 리뷰
-const getFieldReview = (fieldId: string, email: string, reviewId: string) => {
+const getFieldReview = (fieldId: string, email: string, reviewId: string, pageStart: number, pageEnd: number) => {
   let sql = `select a.review_id,  
         a.field_id,
         a.resv_id,
@@ -366,6 +366,10 @@ const getFieldReview = (fieldId: string, email: string, reviewId: string) => {
   if (fieldId) sql = sql + ` and a.field_id = '${fieldId}' `;
   if (email) sql = sql + ` and a.email = '${email}' `;
   if (reviewId) sql = sql + ` and a.review_id = '${reviewId}' `;
+  sql = sql + " order by a.insert_datetime desc ";
+  if (pageStart && pageEnd) {
+    sql = sql + " limit " + pageStart + ", " + pageEnd;
+  }
   return sql;
 };
 

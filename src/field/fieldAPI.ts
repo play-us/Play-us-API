@@ -807,6 +807,16 @@ field.delete(
  *          required: false
  *          description: 리뷰ID
  *          type: string
+ *        - in: query
+ *          name: pageStart
+ *          required: false
+ *          description: 페이지시작
+ *          type: number
+ *        - in: query
+ *          name: pageEnd
+ *          required: false
+ *          description: 페이지끝
+ *          type: number
  *       responses:
  *         "200":
  *           description: field like.
@@ -822,8 +832,10 @@ field.get(
       const fieldId = param["fieldId"] || null;
       const email = param["email"] || null;
       const reviewId = param["reviewId"] || null;
+      const pageStart = param["pageStart"] || null;
+      const pageEnd = param["pageEnd"] || null;
 
-      let sql = fieldDB.getFieldReview(fieldId, email, reviewId);
+      let sql = fieldDB.getFieldReview(fieldId, email, reviewId, pageStart, pageEnd);
       const rows = await db.query(sql);
       const conn = await db.getConnection();
       conn.release();
