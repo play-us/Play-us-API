@@ -178,4 +178,52 @@ mypage.get('/getMyPageData', async(req: express.Request,res:express.Response)=>{
     }
 });
 
+
+/**
+*  @swagger
+*  paths:
+*   /mypage/getMyCommunityWishList:
+*     get:
+*       summary: 커뮤니티 관심 리스트
+*       tags: [MYPAGE]
+*       parameters:
+*        - in: query
+*          name: email
+*          required: true
+*          description: 이메일
+*          type: string
+*        - in: query
+*          name: pageStart
+*          required: false
+*          description: 커뮤니티관심리스트 페이지시작
+*          type: string
+*        - in: query
+*          name: pageEnd
+*          required: false
+*          description: 커뮤니티관심리스트 페이지끝
+*          type: string
+*       responses:
+*         "200":
+*           description: field like.
+*           content:
+*             application/json:
+*/
+mypage.get('/getMyCommunityWishList', async (req: express.Request, res: express.Response) => {
+    try {
+        const param = JSON.parse(JSON.stringify(req.body));
+        const mypageDB = require('../mypage/mypageDB');
+        const email = param['email'];
+        const pageStart = param['pageStart'];
+        const pageEnd = param['pageEnd'];
+        const sql = mypageDB.getMyCommunityWishList(email, pageStart, pageEnd);
+        const rows = await db.query(sql)
+        const conn = await db.getConnection();
+        conn.release();
+        if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
+        else throw console.log('에러발생');
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
 module.exports = mypage;

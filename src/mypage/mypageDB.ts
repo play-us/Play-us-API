@@ -93,23 +93,20 @@ const getMyCommunityWishList = (
   pageEnd: number
 ) => {
   let sql =
-    "SELECT distinct commu_id" +
-    ", commu_title " +
-    ", commu_txt " +
-    ", email " +
-    ", area " +
-    ", dead_line " +
-    ", member_cnt " +
-    ", field_tp " +
-    ", (select count(1) from community_wish x where x.commu_id = a.commu_id) as wish_cnt " +
-    ", (select count(1) from community_comment x where x.commu_id = a.commu_id) as comment_cnt " +
-    ", insert_datetime " +
-    ", update_datetime " +
-    "FROM community a" +
-    "inner join community_wish b on b.commu_id =  a.commu_id and b.email = '" +
-    email +
-    "'";
-  sql = sql + "order by a.insert_datetime desc ";
+    `SELECT distinct a.commu_id
+    , commu_title 
+    , commu_txt 
+    , a.email 
+    , area 
+    , dead_line 
+    , member_cnt 
+    , field_tp 
+    , (select count(1) from community_wish x where x.commu_id = a.commu_id) as wish_cnt 
+    , (select count(1) from community_comment x where x.commu_id = a.commu_id) as comment_cnt 
+    , a.insert_datetime , a.update_datetime 
+    FROM community a 
+    inner join community_wish b on b.commu_id =  a.commu_id and b.email = '${email}'
+    order by a.insert_datetime desc `;
   if (pageStart && pageEnd) {
     sql = sql + " limit " + pageStart + ", " + pageEnd;
   }
