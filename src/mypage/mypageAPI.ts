@@ -28,7 +28,7 @@ interface queryType {
 *       parameters:
 *        - in: query
 *          name: email
-*          required: false
+*          required: true
 *          description: 이메일
 *          type: string
 *        - in: query

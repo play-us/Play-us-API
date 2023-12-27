@@ -1,8 +1,6 @@
 import { StringMappingType } from "typescript";
 
-
 // 카카오 로그인 insert
-
 const insertKakaoUserInfo = (emailDataLength:string,email:string,nickname:string) => {
     if(emailDataLength === "0"){
         const sql = 
