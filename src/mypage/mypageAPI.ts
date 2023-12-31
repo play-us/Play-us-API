@@ -210,7 +210,7 @@ mypage.get('/getMyPageData', async(req: express.Request,res:express.Response)=>{
 */
 mypage.get('/getMyCommunityWishList', async (req: express.Request, res: express.Response) => {
     try {
-        const param = JSON.parse(JSON.stringify(req.body));
+        const param = JSON.parse(JSON.stringify(req.query));
         const mypageDB = require('../mypage/mypageDB');
         const email = param['email'];
         const pageStart = param['pageStart'];
