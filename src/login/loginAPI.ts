@@ -168,6 +168,66 @@ login.get(
     }
   );
 
+  /**
+*  @swagger
+*  paths:
+*   /login/insertMember:
+*     post:
+*       summary: 멤버 등록
+*       tags: [LOGIN]
+*       parameters:
+*        - in: query
+*          name: email
+*          required: true
+*          description: 이메일
+*          type: string
+*        - in: query
+*          name: password
+*          required: true
+*          description: 패스워드
+*          type: string
+*        - in: query
+*          name: name
+*          required: true
+*          description: 이름
+*          type: string
+*        - in: query
+*          name: area
+*          required: true
+*          description: 지역
+*          type: string
+*        - in: query
+*          name: phone
+*          required: true
+*          description: 휴대폰번호
+*          type: string
+*       responses:
+*         "200":
+*           description: member.
+*           content:
+*             application/json:
+*/
+login.post('/insertMember', async (req: express.Request, res: express.Response) => {
+    try {
+      const param = JSON.parse(JSON.stringify(req.body));
+      const loginDB = require('../login/loginDB');
+      const email = param['email'];
+      const password = param['password'];
+      const name = param['name'];
+      const area = param['area'];
+      const phone = param['phone'];
+      const imgUrl = null;
+  
+      let sql = loginDB.insertMember(email, password, name, area, phone, imgUrl);
+      const rows = await db.query(sql);
+      const conn = await db.getConnection();
+      conn.release();
+      if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
+      else throw console.log('에러발생');
+    } catch (err) {
+      console.log(err);
+    }
+  });
 
 module.exports = login;
 

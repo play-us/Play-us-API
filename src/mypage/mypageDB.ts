@@ -105,7 +105,7 @@ const getMyCommunityWishList = (
     , (select count(1) from community_comment x where x.commu_id = a.commu_id) as comment_cnt 
     , a.insert_datetime , a.update_datetime 
     FROM community a 
-    inner join community_wish b on b.commu_id =  a.commu_id and b.email = '${email}'
+    inner join community_wish b on b.commu_id = a.commu_id and b.email = '${email}' 
     order by a.insert_datetime desc `;
   if (pageStart && pageEnd) {
     sql = sql + " limit " + pageStart + ", " + pageEnd;

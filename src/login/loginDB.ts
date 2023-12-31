@@ -33,7 +33,6 @@ const insertKakaoUserInfo = (emailDataLength:string,email:string,nickname:string
     }
 }
 
-
 //유저정보 조회
 const getMember = (email: string, password: string) => {
     let sql = `select a.email
@@ -52,4 +51,34 @@ const getMember = (email: string, password: string) => {
     return sql;
 };
 
-module.exports ={insertKakaoUserInfo, getMember}
+//유저 등록
+const insertMember = (email: string, password: string, name: string, area: string, phone: string, imgUrl: string) => {
+    let sql = `INSERT INTO member
+    (email,
+    password,
+    name,
+    area,
+    phone,
+    img_url,
+    signin_tp,
+    roll,
+    remark_txt,
+    insert_datetime,
+    update_datetime)
+    VALUES
+    ('${email}',
+    '${password}',
+    '${name}',
+    '${area}',
+    '${phone}',
+    '${imgUrl}',
+    '1',
+    '1',
+    NULL,
+    now(),
+    now())
+    `;
+    return sql;
+};
+
+module.exports ={insertKakaoUserInfo, getMember, insertMember}
