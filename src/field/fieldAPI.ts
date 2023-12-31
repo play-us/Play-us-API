@@ -892,11 +892,11 @@ field.post(
     try {
       const param = JSON.parse(JSON.stringify(req.body));
       const fieldDB = require("../field/fieldDB");
-      const fieldId = param["fieldId"];
-      const resvId = param["resvId"];
-      const email = param["email"];
-      const starCnt = param["starCnt"];
-      const reviewCon = param["reviewCon"];
+      const fieldId = param["fieldId"] || null;
+      const resvId = param["resvId"] || null;
+      const email = param["email"] || null;
+      const starCnt = param["starCnt"] || null;
+      const reviewCon = param["reviewCon"] || null;
       let sql = fieldDB.insertFieldReview(
         fieldId,
         resvId,
