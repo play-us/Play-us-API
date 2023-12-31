@@ -897,7 +897,11 @@ field.post(
       const email = param["email"] || null;
       const starCnt = param["starCnt"] || null;
       const reviewCon = param["reviewCon"] || null;
-
+      console.log('fieldId=== ', fieldId);
+      console.log('email=== ', email);
+      console.log('resvId=== ', resvId);
+      console.log('starCnt=== ', starCnt);
+      console.log('reviewCon=== ', reviewCon);
       let sql = fieldDB.insertFieldReview(
         fieldId,
         resvId,
