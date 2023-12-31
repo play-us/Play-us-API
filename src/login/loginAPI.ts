@@ -11,6 +11,13 @@ const passport = require('passport');
 const KakaoStrategy = require('passport-kakao').Strategy;
 const login = express();
 
+/**
+ *  @swagger
+ *  tags:
+ *    name: LOGIN
+ *    description: LOGIN API
+ */
+
 // login.use(
 //     session({
 //       key: "kakaologin",
@@ -116,7 +123,50 @@ passport.use('kakao-login', new KakaoStrategy({
 //    );
 // };
 
-
+/**
+ *  @swagger
+ *  paths:
+ *   /login/getMember:
+ *     get:
+ *       summary: 유저정보 조회
+ *       tags: [LOGIN]
+ *       parameters:
+ *        - in: query
+ *          name: email
+ *          required: true
+ *          description: 이메일
+ *          type: string
+ *        - in: query
+ *          name: password
+ *          required: true
+ *          description: 패스워드
+ *          type: string
+ *       responses:
+ *         "200":
+ *           description: member
+ *           content:
+ *             application/json:
+ */
+login.get(
+    "/getMember",
+    async (req: express.Request, res: express.Response) => {
+      try {
+        const param = JSON.parse(JSON.stringify(req.query));
+        const loginDB = require("../login/loginDB");
+        const email = param["email"];
+        const password = param["password"];
+  
+        let sql = loginDB.getMember(email, password);
+        const rows = await db.query(sql);
+        const conn = await db.getConnection();
+        conn.release();
+        if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
+        else throw console.log("에러발생");
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  );
 
 
 module.exports = login;

@@ -33,4 +33,23 @@ const insertKakaoUserInfo = (emailDataLength:string,email:string,nickname:string
     }
 }
 
-module.exports ={insertKakaoUserInfo}
+
+//유저정보 조회
+const getMember = (email: string, password: string) => {
+    let sql = `select a.email
+        , a.name
+        , a.area
+        , (select syscd_nm from sys_code x where x.class_cd = 'SYS006' and x.syscd_cd = a.area) as area_nm
+        , a.phone
+        , a.img_url
+        , a.signin_tp
+        , a.roll
+        , a.remark_txt
+        , a.insert_datetime
+     from member a
+    where a.email = '${email}'
+      and a.password = '${password}'`;
+    return sql;
+};
+
+module.exports ={insertKakaoUserInfo, getMember}
