@@ -142,11 +142,9 @@ login.post('/kakao', async (req: express.Request, res: express.Response)=>{
 
   // const {accessToken}=await getKakaoToken(param.access_token)
 
-  const {id,email} = await getUserInfo(param.access_token)
-
-  const result = {id: id, email: email}
+  const result = await getUserInfo(param.access_token)
   
-  if (id) return res.status(200).json({ result: result });
+  if (result) return res.status(200).json({ result: result });
     else throw console.log('에러발생');
 })
 
@@ -180,7 +178,7 @@ const getUserInfo = async (accessToken:string)=>{
   const result = get.data
 
 // id, email 추출
-  return {id:result.id,email:result.kakao_account.email}
+  return result;
 }
 
 
