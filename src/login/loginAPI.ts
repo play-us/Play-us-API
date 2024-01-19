@@ -140,9 +140,9 @@ login.post('/kakao', async (req: express.Request, res: express.Response)=>{
 
   const param = JSON.parse(JSON.stringify(req.body));
 
-  const {accessToken}=await getKakaoToken(param.access_token)
+  // const {accessToken}=await getKakaoToken(param.access_token)
 
-  const {id,email} = await getUserInfo(accessToken)
+  const {id,email} = await getUserInfo(param.access_token)
 
   const result = {id: id, email: email}
   
