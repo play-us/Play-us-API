@@ -139,17 +139,14 @@ const login = express();
 login.post('/kakao', async (req: express.Request, res: express.Response)=>{
 
   const param = JSON.parse(JSON.stringify(req.body));
-  console.log(param);
-  // const {code} = req.body  // 프런트에서 인가코드 body에 담아서 보낸거 받기
 
-  // const {accessToken}=await getKakaoToken(code)
+  const {accessToken}=await getKakaoToken(param.access_token)
 
-  // const {id,email} = await getUserInfo(accessToken)
+  const {id,email} = await getUserInfo(accessToken)
 
-  // console.log(id,email)
-  // const result = {id: id, email: email}
+  const result = {id: id, email: email}
   
-  if (param) return res.status(200).json({ result: param });
+  if (id) return res.status(200).json({ result: result });
     else throw console.log('에러발생');
 })
 
