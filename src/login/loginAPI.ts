@@ -138,16 +138,18 @@ const login = express();
  */
 login.post('/kakao', async (req: express.Request, res: express.Response)=>{
 
-  const {code} = req.body  // 프런트에서 인가코드 body에 담아서 보낸거 받기
+  const param = JSON.parse(JSON.stringify(req.body));
+  console.log(param);
+  // const {code} = req.body  // 프런트에서 인가코드 body에 담아서 보낸거 받기
 
-  const {accessToken}=await getKakaoToken(code)
+  // const {accessToken}=await getKakaoToken(code)
 
-  const {id,email} = await getUserInfo(accessToken)
+  // const {id,email} = await getUserInfo(accessToken)
 
-  console.log(id,email)
-  const result = {id: id, email: email}
+  // console.log(id,email)
+  // const result = {id: id, email: email}
   
-  if (id) return res.status(200).json({ result: result });
+  if (param) return res.status(200).json({ result: param });
     else throw console.log('에러발생');
 })
 
