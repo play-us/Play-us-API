@@ -31,40 +31,40 @@ const login = express();
 //   login.use(passport.initialize()); // Passport 초기화
 //   login.use(passport.session()); // Passport가 세션을 사용하도록 설정
 
-login.get('/auth/kakao',passport.authenticate('kakao-login'));
-login.get('http://localhost:8080/login/auth/kakao', passport.authenticate('kakao-login', {
-    failureRedirect: 'http://localhost:3000',
-}), (req, res) => {
-    res.redirect('http://localhost:3000');
-});
+// login.get('/auth/kakao',passport.authenticate('kakao-login'));
+// login.get('http://localhost:8080/login/auth/kakao', passport.authenticate('kakao-login', {
+//     failureRedirect: 'http://localhost:3000',
+// }), (req, res) => {
+//     res.redirect('http://localhost:3000');
+// });
 
-login.get('/logout', (req: any, res: any) => {
-    (req as any).logout(); // Type Assertion으로 타입 강제 변경
-    (req as any).session.destroy(); // Type Assertion으로 타입 강제 변경
-});
+// login.get('/logout', (req: any, res: any) => {
+//     (req as any).logout(); // Type Assertion으로 타입 강제 변경
+//     (req as any).session.destroy(); // Type Assertion으로 타입 강제 변경
+// });
 
-passport.use('kakao-login', new KakaoStrategy({
-    clientID: '339e89afa8db6fa34c3139f5395b4ea2',
-    callbackURL: 'http://localhost:8080/login/auth/kakao',
-}, async (accessToken:string, refreshToken:string, profile:any, done:any,req: express.Request, res: express.Response) => {
-    try {
-    const loginDB = require('../login/loginDB');
-    const emailCheckQuery = `SELECT * FROM member WHERE email='${profile._json.kakao_account.email}'`;
-    const checkRow = await db.query(emailCheckQuery);
-    const emailDataLength = checkRow.length.toString();
-    console.log(emailDataLength);
-    console.log(profile._json.kakao_account.email);
-    console.log(profile._json.properties.nickname);
-    console.log(profile._json.properties.profile_image);
-    let sql = loginDB.insertKakaoUserInfo(emailDataLength,profile._json.kakao_account.email,profile._json.properties.nickname);
-    const rows = await db.query(sql);
-    const conn = await db.getConnection();
-    conn.release();
-  } catch (err) {
-    console.log(err);
-  }
-}
-));
+// passport.use('kakao-login', new KakaoStrategy({
+//     clientID: '339e89afa8db6fa34c3139f5395b4ea2',
+//     callbackURL: 'http://localhost:8080/login/auth/kakao',
+// }, async (accessToken:string, refreshToken:string, profile:any, done:any,req: express.Request, res: express.Response) => {
+//     try {
+//     const loginDB = require('../login/loginDB');
+//     const emailCheckQuery = `SELECT * FROM member WHERE email='${profile._json.kakao_account.email}'`;
+//     const checkRow = await db.query(emailCheckQuery);
+//     const emailDataLength = checkRow.length.toString();
+//     console.log(emailDataLength);
+//     console.log(profile._json.kakao_account.email);
+//     console.log(profile._json.properties.nickname);
+//     console.log(profile._json.properties.profile_image);
+//     let sql = loginDB.insertKakaoUserInfo(emailDataLength,profile._json.kakao_account.email,profile._json.properties.nickname);
+//     const rows = await db.query(sql);
+//     const conn = await db.getConnection();
+//     conn.release();
+//   } catch (err) {
+//     console.log(err);
+//   }
+// }
+// ));
 // passport.serializeUser((data:any, done:any) => {
 //     console.log('시리얼라이즈 유저', data); // user는 tokenUser다.
 //     // 로그인 시, 사용자 데이터를 세션에 저장하는데
@@ -136,7 +136,7 @@ passport.use('kakao-login', new KakaoStrategy({
  *           content:
  *             application/json:
  */
-login.post('/kakao',async (req,res,next)=>{
+login.post('/kakao', async (req: express.Request, res: express.Response)=>{
 
   const {code} = req.body  // 프런트에서 인가코드 body에 담아서 보낸거 받기
 
@@ -146,7 +146,7 @@ login.post('/kakao',async (req,res,next)=>{
 
   console.log(id,email)
   const result = {id: id, email: email}
-
+  
   if (id) return res.status(200).json({ result: result });
     else throw console.log('에러발생');
 })
