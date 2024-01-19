@@ -139,12 +139,19 @@ const login = express();
 login.post('/kakao', async (req: express.Request, res: express.Response)=>{
 
   const param = JSON.parse(JSON.stringify(req.body));
+  const userInfo = await getUserInfo(param.access_token)
+  const email = userInfo.kakao_account.email;
+  const name = userInfo.properties.nickname;
 
-  // const {accessToken}=await getKakaoToken(param.access_token)
+  const loginDB = require("../login/loginDB");
+  let insertSql = loginDB.insertKakaoMember(email, name);
+  await db.query(insertSql);
+  let sql = loginDB.getKakaoMember(email);
+  const rows = await db.query(sql);
+  const conn = await db.getConnection();
+  conn.release();
 
-  const result = await getUserInfo(param.access_token)
-  
-  if (result) return res.status(200).json({ result: result });
+  if (rows) return res.status(200).json({ result: camelsKeys(rows[0]) });
     else throw console.log('에러발생');
 })
 
@@ -176,8 +183,6 @@ const getUserInfo = async (accessToken:string)=>{
   // 카카오 사용자 정보 조회
   const get = await axios.get("https://kapi.kakao.com/v2/user/me", {headers: header})
   const result = get.data
-
-// id, email 추출
   return result;
 }
 
