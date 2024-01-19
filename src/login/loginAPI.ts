@@ -126,6 +126,68 @@ passport.use('kakao-login', new KakaoStrategy({
 /**
  *  @swagger
  *  paths:
+ *   /login/kakao:
+ *     post:
+ *       summary: 카카오로그인
+ *       tags: [LOGIN]
+ *       responses:
+ *         "200":
+ *           description: member
+ *           content:
+ *             application/json:
+ */
+login.post('/kakao',async (req,res,next)=>{
+
+  const {code} = req.body  // 프런트에서 인가코드 body에 담아서 보낸거 받기
+
+  const {accessToken}=await getKakaoToken(code)
+
+  const {id,email} = await getUserInfo(accessToken)
+
+  console.log(id,email)
+  const result = {id: id, email: email}
+
+  if (id) return res.status(200).json({ result: result });
+    else throw console.log('에러발생');
+})
+
+const getKakaoToken = async (code:string)=>{
+  const restApiKey = '339e89afa8db6fa34c3139f5395b4ea2'  // 앱키 - Rest API key
+  const data :any={
+      grant_type:'authorization_code',
+      client_id:restApiKey,
+      code
+  }
+  const queryString = Object.keys(data)
+      .map(k=>encodeURIComponent(k)+'='+encodeURIComponent(data[k]))
+      .join('&')
+  // 카카오 토큰 요청
+  const token = await axios.post("https://kauth.kakao.com/oauth/token", queryString, {headers: header})
+  // 엑세스 토큰 발급
+  return {accessToken:token.data.access_token}
+}
+
+const header = {
+  'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+  'Authorization': 'Bearer '
+};
+
+const getUserInfo = async (accessToken:string)=>{
+  // Authorization: 'Bearer access_token'
+  // 엑세스 토큰 헤더에 담기
+  header.Authorization +=accessToken
+  // 카카오 사용자 정보 조회
+  const get = await axios.get("https://kapi.kakao.com/v2/user/me", {headers: header})
+  const result = get.data
+
+// id, email 추출
+  return {id:result.id,email:result.kakao_account.email}
+}
+
+
+/**
+ *  @swagger
+ *  paths:
  *   /login/getMember:
  *     get:
  *       summary: 유저정보 조회
